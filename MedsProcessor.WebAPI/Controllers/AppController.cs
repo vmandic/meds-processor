@@ -1,12 +1,13 @@
 using System;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
 {
-	[ApiController, Route("api/[controller]")]
+	[ApiController, Route("~/")]
 	public class AppController : ControllerBase
 	{
-		public async Task<ActionResult> Index()
+		public ActionResult Index()
 		{
 			var startTime = DateTime.Now;
 			// TODO: implement scraper and parser logic
