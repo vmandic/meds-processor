@@ -7,7 +7,7 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Scraper", "Me
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Parser", "MedsProcessor.Parser\MedsProcessor.Parser.csproj", "{AA50F3C1-74EC-4100-B1DA-F4F72D4A4790}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Utils", "MedsProcessor.Utils\MedsProcessor.Utils.csproj", "{CD8566B9-F04F-48C0-A734-D008C0E63633}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Common", "MedsProcessor.Common\MedsProcessor.Common.csproj", "{CD8566B9-F04F-48C0-A734-D008C0E63633}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.WebAPI", "MedsProcessor.WebAPI\MedsProcessor.WebAPI.csproj", "{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}"
 EndProject
