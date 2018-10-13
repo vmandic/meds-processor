@@ -1,19 +1,21 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp2.1</TargetFramework>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp2.1</TargetFramework>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Folder Include="wwwroot\" />
-  </ItemGroup>
+	<ItemGroup>
+		<Folder Include="wwwroot\" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.App" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.App" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\MedsProcessor.Utils\MedsProcessor.Utils.csproj" />
-  </ItemGroup>
+	<ItemGroup>
+		<ProjectReference Include="..\MedsProcessor.Common\MedsProcessor.Common.csproj" />
+		<ProjectReference Include="..\MedsProcessor.Scraper\MedsProcessor.Scraper.csproj" />
+		<ProjectReference Include="..\MedsProcessor.Parser\MedsProcessor.Parser.csproj" />
+	</ItemGroup>
 
 </Project>
