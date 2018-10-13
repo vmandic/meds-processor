@@ -1,17 +1,15 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using AngleSharp;
 using AngleSharp.Dom;
-using MedsProcessor.Common;
 using MedsProcessor.Common.Models;
 using static MedsProcessor.Common.Constants;
 
 namespace MedsProcessor.Scraper
 {
-	public class HzzoHtmlScraper
+    public class HzzoHtmlScraper
 	{
 		static readonly DateTime filterDtParsable2013 = new DateTime(2013, 6, 13);
 		readonly IBrowsingContext _browsingContext;
