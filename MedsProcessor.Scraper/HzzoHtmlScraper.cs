@@ -9,7 +9,7 @@ using static MedsProcessor.Common.Constants;
 
 namespace MedsProcessor.Scraper
 {
-    public class HzzoHtmlScraper
+	public class HzzoHtmlScraper
 	{
 		static readonly DateTime filterDtParsable2013 = new DateTime(2013, 6, 13);
 		readonly IBrowsingContext _browsingContext;
@@ -72,8 +72,8 @@ namespace MedsProcessor.Scraper
 		static Func<IElement, bool> _predicateForListLiMeds =
 			x =>
 			// primary list:
-			x.TextContent.ToLowerInvariant().Contains("osnovna lista lijekova") ||
+			x.TextContent.Contains("Osnovna lista lijekova") ||
 			// supplementary list:
-			x.TextContent.ToLowerInvariant().Contains("dopunska lista lijekova");
+			x.TextContent.Contains("Dopunska lista lijekova");
 	}
 }
