@@ -27,6 +27,11 @@ namespace MedsProcessor.Scraper
 			return parsedDocs;
 		}
 
+		private object DownloadExcelDocuments(ISet<HzzoMedsDownloadDto> parsedDocs)
+		{
+			throw new NotImplementedException();
+		}
+
 		Task<IDocument[]> DownloadHtmlDocuments() =>
 			Task.WhenAll(
 				_browsingContext.OpenAsync(CURRENT_LISTS_URL),
