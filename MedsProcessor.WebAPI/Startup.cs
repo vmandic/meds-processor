@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedsProcessor.Common.Models;
+using MedsProcessor.Downloader;
 using MedsProcessor.Scraper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
@@ -34,6 +35,7 @@ namespace MedsProcessor.WebAPI
 				s => new AppPathsInfo(s.GetService<IHostingEnvironment>().ContentRootPath));
 
 			services.AddSingleton<HzzoHtmlScraper>();
+			services.AddSingleton<HzzoExcelDownloader>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}

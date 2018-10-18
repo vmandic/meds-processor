@@ -1,7 +1,9 @@
 using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using MedsProcessor.Common.Models;
+using MedsProcessor.Downloader;
 using MedsProcessor.Scraper;
 using Microsoft.AspNetCore.Mvc;
 
@@ -10,13 +12,14 @@ namespace MedsProcessor.WebAPI.Controllers
 	[ApiController, Route("~/")]
 	public class AppController : ControllerBase
 	{
+		static ISet<HzzoMedsDownloadDto> meds = new HashSet<HzzoMedsDownloadDto>();
 		public async Task<ActionResult> Index(
-			[FromServices] HzzoHtmlScraper scraper)
+			[FromServices] HzzoHtmlScraper scraper, [FromServices] HzzoExcelDownloader downloader)
 		{
 			var startTime = DateTime.Now;
 			// TODO: implement scraper and parser logic
-			var meds = await scraper.Run();
-			// meds = await parser.Run(meds);
+			meds = await scraper.Run();
+			meds = await downloader.Run(meds);
 
 			var totalTime = startTime - DateTime.Now;
 

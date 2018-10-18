@@ -16,6 +16,7 @@
 		<ProjectReference Include="..\MedsProcessor.Common\MedsProcessor.Common.csproj" />
 		<ProjectReference Include="..\MedsProcessor.Scraper\MedsProcessor.Scraper.csproj" />
 		<ProjectReference Include="..\MedsProcessor.Parser\MedsProcessor.Parser.csproj" />
+		<ProjectReference Include="..\MedsProcessor.Downloader\MedsProcessor.Downloader.csproj" />
 	</ItemGroup>
 
 </Project>
