@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Common", "Med
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.WebAPI", "MedsProcessor.WebAPI\MedsProcessor.WebAPI.csproj", "{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MedsProcessor.Downloader", "MedsProcessor.Downloader\MedsProcessor.Downloader.csproj", "{02947F5D-30ED-4C05-9B5C-84759274904C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -72,5 +74,17 @@ Global
 		{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}.Release|x64.Build.0 = Release|Any CPU
 		{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}.Release|x86.ActiveCfg = Release|Any CPU
 		{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}.Release|x86.Build.0 = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|x64.ActiveCfg = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|x64.Build.0 = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|x86.ActiveCfg = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Debug|x86.Build.0 = Debug|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|x64.ActiveCfg = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|x64.Build.0 = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|x86.ActiveCfg = Release|Any CPU
+		{02947F5D-30ED-4C05-9B5C-84759274904C}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

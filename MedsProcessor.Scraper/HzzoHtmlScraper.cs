@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using AngleSharp;
@@ -13,10 +14,12 @@ namespace MedsProcessor.Scraper
 	{
 		static readonly DateTime filterDtParsable2013 = new DateTime(2013, 6, 13);
 		readonly IBrowsingContext _browsingContext;
+		readonly AppPathsInfo _appPathsInfo;
 
-		public HzzoHtmlScraper(IBrowsingContext browsingContext)
+		public HzzoHtmlScraper(IBrowsingContext browsingContext, AppPathsInfo appPathsInfo)
 		{
 			this._browsingContext = browsingContext;
+			this._appPathsInfo = appPathsInfo;
 		}
 
 		public async Task<ISet<HzzoMedsDownloadDto>> Run()
@@ -39,7 +42,7 @@ namespace MedsProcessor.Scraper
 				(docList, doc) => new HashSet<HzzoMedsDownloadDto>(docList.Concat(ParseHtmlDocument(doc)))
 			);
 
-		static ISet<HzzoMedsDownloadDto> ParseMedsLiElements(IEnumerable<IElement> elems) =>
+		ISet<HzzoMedsDownloadDto> ParseMedsLiElements(IEnumerable<IElement> elems) =>
 			elems.Aggregate(new HashSet<HzzoMedsDownloadDto>(), (medsList, li) =>
 			{
 				var href = li.QuerySelector("a").GetAttribute("href");
@@ -47,10 +50,11 @@ namespace MedsProcessor.Scraper
 				// NOTE: this domain is not available, links don't work :-(
 				if (!href.Contains("cdn.hzzo.hr"))
 				{
+					var dtParts = li.TextContent.TrimEnd().Split(' ').LastOrDefault().Split('.');
 					var downloadDto = new HzzoMedsDownloadDto(
 						href,
-						li.TextContent.TrimEnd().Split(' ').LastOrDefault(),
-						DOWNLOAD_DIR
+						$"{dtParts[2]}-{dtParts[1]}-{dtParts[0]}",
+						Path.Combine(_appPathsInfo.ApplicationRootPath, DOWNLOAD_DIR)
 					);
 
 					// NOTE: that's it folks, docs from 2013 and older are messed up
@@ -63,7 +67,7 @@ namespace MedsProcessor.Scraper
 				return medsList;
 			});
 
-		static ISet<HzzoMedsDownloadDto> ParseHtmlDocument(IDocument doc) =>
+		ISet<HzzoMedsDownloadDto> ParseHtmlDocument(IDocument doc) =>
 			ParseMedsLiElements(SelectLiElements(doc));
 
 		static IEnumerable<IElement> SelectLiElements(IDocument doc) =>
