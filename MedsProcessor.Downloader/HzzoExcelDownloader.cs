@@ -12,12 +12,12 @@ namespace MedsProcessor.Downloader
 	{
 		const int BUFFER_SIZE = 1024;
 		readonly string _downloadDirPath;
-		readonly IHttpClientFactory _httpCliFact;
+		readonly HttpClient _httpCli;
 
 		public HzzoExcelDownloader(IHttpClientFactory httpCliFact, AppPathsInfo appPathsInfo)
 		{
-			this._httpCliFact = httpCliFact;
-			this._downloadDirPath = $@"{appPathsInfo.ApplicationRootPath}\{DOWNLOAD_DIR}";
+			this._httpCli = httpCliFact.CreateClient();
+			this._downloadDirPath = Path.Combine(appPathsInfo.ApplicationRootPath, DOWNLOAD_DIR);
 
 			if (!Directory.Exists(_downloadDirPath))
 				Directory.CreateDirectory(_downloadDirPath);
@@ -25,11 +25,10 @@ namespace MedsProcessor.Downloader
 
 		public async Task<ISet<HzzoMedsDownloadDto>> Run(ISet<HzzoMedsDownloadDto> meds)
 		{
-			// NOTE: throttle requests in parallel:
+			// NOTE: throttle requests in parallel
 			var parallelismDegree = 5;
 			var waitBetweenRequestsMs = 500;
 
-			var httpCli = _httpCliFact.CreateClient();
 			var savingItems = new List<Task>();
 			var notDownloadedDocs = meds.Where(x => !x.IsAlreadyDownloaded).ToList();
 
@@ -38,17 +37,30 @@ namespace MedsProcessor.Downloader
 				var queuedMeds = meds.Skip(i).Take(parallelismDegree);
 
 				savingItems.AddRange(
-					(await Task.WhenAll(
-						queuedMeds.Select(med => med.DownloadExcel(httpCli))))
+					(await Task.WhenAll(queuedMeds.Select(DownloadExcel)))
 					.Select(SaveExcel));
 
 				await Task.Delay(waitBetweenRequestsMs);
 			}
 
 			Task.WaitAll(savingItems.ToArray());
-
 			return meds;
 		}
+
+		async Task<HzzoMedsDownloadDto> DownloadExcel(HzzoMedsDownloadDto doc)
+		{
+			doc.DocumentStream = await _httpCli.GetStreamAsync(doc.Href);
+			return doc;
+		}
+
+		static Task SaveExcel(HzzoMedsDownloadDto doc) =>
+			Task.Factory.StartNew(() =>
+			{
+				using(var fileStream = File.Create(doc.FilePath, BUFFER_SIZE, FileOptions.Asynchronous))
+				{
+					CopyStream(doc.DocumentStream, fileStream);
+				}
+			}, TaskCreationOptions.LongRunning);
 
 		/// <summary>
 		/// Copies the contents of input to output. Doesn't close either stream.
@@ -61,14 +73,5 @@ namespace MedsProcessor.Downloader
 			while ((len = input.Read(buffer, 0, buffer.Length)) > 0)
 				output.Write(buffer, 0, len);
 		}
-
-		static Task SaveExcel(HzzoMedsDownloadDto doc) =>
-			Task.Factory.StartNew(() =>
-			{
-				using(var fileStream = File.Create($"{DOWNLOAD_DIR}{doc.FileName}", BUFFER_SIZE, FileOptions.Asynchronous))
-				{
-					CopyStream(doc.DocumentStream, fileStream);
-				}
-			}, TaskCreationOptions.LongRunning);
 	}
 }

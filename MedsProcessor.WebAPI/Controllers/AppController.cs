@@ -12,15 +12,11 @@ namespace MedsProcessor.WebAPI.Controllers
 	[ApiController, Route("~/")]
 	public class AppController : ControllerBase
 	{
-		static ISet<HzzoMedsDownloadDto> meds = new HashSet<HzzoMedsDownloadDto>();
 		public async Task<ActionResult> Index(
 			[FromServices] HzzoHtmlScraper scraper, [FromServices] HzzoExcelDownloader downloader)
 		{
 			var startTime = DateTime.Now;
-			// TODO: implement scraper and parser logic
-			meds = await scraper.Run();
-			meds = await downloader.Run(meds);
-
+			var meds = await downloader.Run(await scraper.Run());
 			var totalTime = startTime - DateTime.Now;
 
 			return Ok(

@@ -1,8 +1,6 @@
 using System;
 using System.IO;
 using System.Linq;
-using System.Net.Http;
-using System.Threading.Tasks;
 
 namespace MedsProcessor.Common.Models
 {
@@ -18,7 +16,7 @@ namespace MedsProcessor.Common.Models
 		}
 
 		public string FilePath =>
-			_rootLocation + FileName;
+			Path.Combine(_rootLocation, FileName);
 
 		public bool IsAlreadyDownloaded =>
 			File.Exists(FilePath);
@@ -29,12 +27,6 @@ namespace MedsProcessor.Common.Models
 
 		public string Href { get; internal set; }
 		public DateTime ValidFrom { get; private set; }
-		public Stream DocumentStream { get; private set; }
-
-		public async Task<HzzoMedsDownloadDto> DownloadExcel(HttpClient httpCli)
-		{
-			DocumentStream = await httpCli.GetStreamAsync(this.Href);
-			return this;
-		}
+		public Stream DocumentStream { get; set; }
 	}
 }
