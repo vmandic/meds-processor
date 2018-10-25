@@ -11,16 +11,16 @@ namespace MedsProcessor.Downloader
 	public class HzzoExcelDownloader
 	{
 		const int BUFFER_SIZE = 1024;
-		readonly string _downloadDirPath;
+		public string DownloadDirPath { get; }
 		readonly HttpClient _httpCli;
 
 		public HzzoExcelDownloader(IHttpClientFactory httpCliFact, AppPathsInfo appPathsInfo)
 		{
 			this._httpCli = httpCliFact.CreateClient();
-			this._downloadDirPath = Path.Combine(appPathsInfo.ApplicationRootPath, DOWNLOAD_DIR);
+			this.DownloadDirPath = Path.Combine(appPathsInfo.ApplicationRootPath, DOWNLOAD_DIR);
 
-			if (!Directory.Exists(_downloadDirPath))
-				Directory.CreateDirectory(_downloadDirPath);
+			if (!Directory.Exists(DownloadDirPath))
+				Directory.CreateDirectory(DownloadDirPath);
 		}
 
 		public async Task<ISet<HzzoMedsDownloadDto>> Run(ISet<HzzoMedsDownloadDto> meds)
