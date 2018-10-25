@@ -33,9 +33,5 @@ namespace MedsProcessor.WebAPI.Controllers
 				string.Join(Environment.NewLine, meds.Select(x => x.FileName))
 			);
 		}
-
-		[HttpGet("/root-path")]
-		public string RootPath([FromServices] AppPathsInfo apInfo) =>
-			"path: " + apInfo.ApplicationRootPath;
 	}
 }
