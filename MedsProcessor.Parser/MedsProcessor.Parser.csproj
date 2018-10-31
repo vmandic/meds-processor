@@ -4,6 +4,10 @@
 		<ProjectReference Include="..\MedsProcessor.Common\MedsProcessor.Common.csproj" />
 	</ItemGroup>
 
+	<ItemGroup>
+	  <PackageReference Include="DotNetCore.NPOI" Version="1.2.1" />
+	</ItemGroup>
+
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 	</PropertyGroup>
