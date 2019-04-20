@@ -38,6 +38,8 @@ namespace MedsProcessor.WebAPI
 			services.AddSingleton<HzzoHtmlScraper>();
 			services.AddSingleton<HzzoExcelDownloader>();
 			services.AddSingleton<HzzoExcelParser>();
+			services.AddSingleton<Processor>();
+			services.AddSingleton<HzzoData>();
 
 			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
