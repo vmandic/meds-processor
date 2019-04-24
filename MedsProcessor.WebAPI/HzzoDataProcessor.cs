@@ -8,7 +8,7 @@ using MedsProcessor.Scraper;
 
 namespace MedsProcessor.WebAPI
 {
-	public class Processor
+	public class HzzoDataProcessor
 	{
 		private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 		private readonly HzzoHtmlScraper _scraper;
@@ -16,7 +16,7 @@ namespace MedsProcessor.WebAPI
 		private readonly HzzoExcelParser _parser;
 		private readonly HzzoData _data;
 
-		public Processor(
+		public HzzoDataProcessor(
 			HzzoHtmlScraper scraper,
 			HzzoExcelDownloader downloader,
 			HzzoExcelParser parser,
@@ -30,33 +30,33 @@ namespace MedsProcessor.WebAPI
 
 		private string GetParseDetails() =>
 			Environment.NewLine +
-			$"Documents ({_data.Set.Count}) downloaded on path: '{_downloader.DownloadDirPath}'" +
+			$"Documents ({_data.Set.Count}) are downloaded on path: '{_downloader.DownloadDirPath}'" +
 			Environment.NewLine +
-			$"Total records parsed: {_data.Set.SelectMany(x => x.MedsList).Count()}" + Environment.NewLine +
+			$"Total records parsed: {_data.Set.SelectMany(x => x.MedsList).Count()}" +
+			Environment.NewLine +
 			Environment.NewLine +
 			string.Join(Environment.NewLine, _data.Set.Select(x => x.FileName));
 
-		public async Task<string> Run()
+		public async Task<string> Run(bool force = false)
 		{
 			// utilize if-lock-if pattern
-			if (!_data.IsLoaded())
+			if (force || !_data.IsLoaded())
 			{
 				try
 				{
 					await semaphoreSlim.WaitAsync();
 
-					if (!_data.IsLoaded())
+					if (force || !_data.IsLoaded())
 					{
 						var startTime = DateTime.Now;
 
-						var scraped = await _scraper.Run();
-						var downloaded = await _downloader.Run(scraped);
-						var meds = await _parser.Run(downloaded);
+						var scrapedHtml = await _scraper.Run();
+						var downloadedXls = await _downloader.Run(scrapedHtml, force);
+						var parsedMeds = _parser.Run(downloadedXls);
 
-						_data.Set = meds;
+						_data.Load(parsedMeds, force);
 
 						var totalTime = startTime - DateTime.Now;
-
 						return $"Processed! Handler duration: {totalTime.Duration()}{GetParseDetails()}";
 					}
 				}

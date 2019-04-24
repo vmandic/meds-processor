@@ -10,17 +10,17 @@ namespace MedsProcessor.WebAPI.Controllers
 	[ApiController, Route("[controller]")]
 	public class ProcessorController : ControllerBase
 	{
-		private readonly Processor _processor;
+		private readonly HzzoDataProcessor _processor;
 
-		public ProcessorController(Processor processor)
+		public ProcessorController(HzzoDataProcessor processor)
 		{
 			this._processor = processor;
 		}
 
-		[HttpGet("run")]
-		public async Task<ActionResult> Run()
+		[HttpGet("run/{force?}")]
+		public async Task<ActionResult> Run(bool force = false)
 		{
-			return Ok(await _processor.Run());
+			return Ok(await _processor.Run(force));
 		}
 	}
 }

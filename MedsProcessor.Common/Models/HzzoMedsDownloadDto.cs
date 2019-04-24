@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace MedsProcessor.Common.Models
 {
@@ -30,6 +32,8 @@ namespace MedsProcessor.Common.Models
 
 		public string Href { get; set; }
 		public DateTime ValidFrom { get; private set; }
-		public Stream DocumentStream { get; set; }
+
+		[IgnoreDataMember]
+		public Task<Stream> DocumentStream { get; set; }
 	}
 }

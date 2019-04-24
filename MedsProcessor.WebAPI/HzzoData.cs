@@ -12,7 +12,7 @@ namespace MedsProcessor.WebAPI
 			get => _set ??
 				throw new InvalidOperationException("The dataset was not loaded.");
 
-			set
+			private set
 			{
 				if (_set != null)
 					throw new InvalidOperationException("The dataset was already loaded.");
@@ -22,6 +22,15 @@ namespace MedsProcessor.WebAPI
 			}
 		}
 
+		public void Load(ISet<HzzoMedsDownloadDto> data, bool forceReload = false)
+		{
+			if (forceReload)
+			{
+				_set = null;
+			}
+
+			Set = data;
+		}
 		public bool IsLoaded() => _set != null;
 	}
 }
