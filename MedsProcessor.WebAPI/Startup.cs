@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using MedsProcessor.Common.Models;
+﻿using MedsProcessor.Common.Models;
 using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.HttpsPolicy;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace MedsProcessor.WebAPI
 {
-	public class Startup
+    public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
@@ -31,6 +27,7 @@ namespace MedsProcessor.WebAPI
 		{
 			services.AddHttpClient();
 			services.AddAngleSharp();
+			services.AddResponseCompression();
 
 			services.AddSingleton(
 				s => new AppPathsInfo(s.GetService<IHostingEnvironment>().ContentRootPath));
@@ -41,7 +38,17 @@ namespace MedsProcessor.WebAPI
 			services.AddSingleton<HzzoDataProcessor>();
 			services.AddSingleton<HzzoData>();
 
-			services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+			services.AddMvc()
+				.AddJsonOptions(opts =>
+				{
+					opts.SerializerSettings.ContractResolver = new DefaultContractResolver
+					{
+						NamingStrategy = new SnakeCaseNamingStrategy()
+					};
+					opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+					opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+				})
+				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
 		}
 
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -57,6 +64,7 @@ namespace MedsProcessor.WebAPI
 			}
 
 			app.UseHttpsRedirection();
+			app.UseResponseCompression();
 			app.UseMvc();
 		}
 	}

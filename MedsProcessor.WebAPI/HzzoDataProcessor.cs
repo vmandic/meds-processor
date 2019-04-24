@@ -11,6 +11,8 @@ namespace MedsProcessor.WebAPI
 	public class HzzoDataProcessor
 	{
 		private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+		private static TimeSpan totalTime;
+		private static DateTime lastProcessingFinishedOn;
 		private readonly HzzoHtmlScraper _scraper;
 		private readonly HzzoExcelDownloader _downloader;
 		private readonly HzzoExcelParser _parser;
@@ -56,7 +58,8 @@ namespace MedsProcessor.WebAPI
 
 						_data.Load(parsedMeds, force);
 
-						var totalTime = startTime - DateTime.Now;
+						totalTime = startTime - DateTime.Now;
+						lastProcessingFinishedOn = DateTime.Now;
 						return $"Processed! Handler duration: {totalTime.Duration()}{GetParseDetails()}";
 					}
 				}
@@ -66,7 +69,7 @@ namespace MedsProcessor.WebAPI
 				}
 			}
 
-			return $"Processing skipped! Data was already loaded.{GetParseDetails()}";
+			return $"Skipped! Data already processed on: {lastProcessingFinishedOn} (Duration was: {totalTime.Duration()}){GetParseDetails()}";
 		}
 	}
 }

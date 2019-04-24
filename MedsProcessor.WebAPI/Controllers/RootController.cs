@@ -8,7 +8,7 @@ namespace MedsProcessor.WebAPI.Controllers
 		[HttpGet]
 		public ActionResult Index()
 		{
-			return Ok("The Web API meds-processor is running... You can start the processor at: ~/processor/run/{force:bool?}");
+			return Ok("The Web API meds-processor is running... You can force start the processor at: ~/processor/run/true");
 		}
 	}
 }
