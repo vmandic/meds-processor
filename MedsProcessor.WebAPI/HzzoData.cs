@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using MedsProcessor.Common.Models;
 
 namespace MedsProcessor.WebAPI
@@ -22,15 +23,20 @@ namespace MedsProcessor.WebAPI
 			}
 		}
 
-		public void Load(ISet<HzzoMedsDownloadDto> data, bool forceReload = false)
+		internal void Load(ISet<HzzoMedsDownloadDto> data, bool forceReload = false)
 		{
 			if (forceReload)
 			{
-				_set = null;
+				Clear();
 			}
 
 			Set = data;
 		}
-		public bool IsLoaded() => _set != null;
+
+		internal bool IsLoaded() =>
+			_set != null && _set.All(x => x.IsDataParsed);
+
+		internal void Clear() =>
+			_set = null;
 	}
 }

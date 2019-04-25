@@ -1,13 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using MedsProcessor.Common;
 using MedsProcessor.Common.Models;
-using MedsProcessor.Parser;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
-	{
-		[ApiController, Route("[controller]")]
+{
+    [ApiController, Route("[controller]")]
 		public class MedsController : ControllerBase
 		{
 			public enum ListType

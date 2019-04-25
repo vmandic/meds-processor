@@ -35,5 +35,10 @@ namespace MedsProcessor.Common.Models
 
 		[IgnoreDataMember]
 		public Task<Stream> DocumentStream { get; set; }
+
+		public bool IsDataParsed { get; private set; }
+
+		public void MarkAsParsed() =>
+			IsDataParsed = true;
 	}
 }

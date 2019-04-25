@@ -2,6 +2,8 @@ using System;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
+using MedsProcessor.Common;
+using MedsProcessor.Common.Models;
 using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
@@ -10,9 +12,11 @@ namespace MedsProcessor.WebAPI
 {
 	public class HzzoDataProcessor
 	{
-		private static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-		private static TimeSpan totalTime;
-		private static DateTime lastProcessingFinishedOn;
+		private readonly SemaphoreSlim _semaphoreSlim = new SemaphoreSlim(1, 1);
+		private TimeSpan? _lastRunDuration;
+		private DateTime? _lastRunFinishedOn;
+		private ProcessorState _state = ProcessorState.NotRan;
+		private int _timesRan = 0;
 		private readonly HzzoHtmlScraper _scraper;
 		private readonly HzzoExcelDownloader _downloader;
 		private readonly HzzoExcelParser _parser;
@@ -46,10 +50,11 @@ namespace MedsProcessor.WebAPI
 			{
 				try
 				{
-					await semaphoreSlim.WaitAsync();
+					await _semaphoreSlim.WaitAsync();
 
 					if (force || !_data.IsLoaded())
 					{
+						_state = ProcessorState.Running;
 						var startTime = DateTime.Now;
 
 						var scrapedHtml = await _scraper.Run();
@@ -57,19 +62,42 @@ namespace MedsProcessor.WebAPI
 						var parsedMeds = _parser.Run(downloadedXls);
 
 						_data.Load(parsedMeds, force);
+						_state = ProcessorState.Ran;
+						_timesRan++;
+						_lastRunDuration = DateTime.Now - startTime;
+						_lastRunFinishedOn = DateTime.Now;
 
-						totalTime = startTime - DateTime.Now;
-						lastProcessingFinishedOn = DateTime.Now;
-						return $"Processed! Handler duration: {totalTime.Duration()}{GetParseDetails()}";
+						return $"Processed! Handler duration: {_lastRunDuration}{GetParseDetails()}";
 					}
 				}
 				finally
 				{
-					semaphoreSlim.Release();
+					_semaphoreSlim.Release();
 				}
 			}
 
-			return $"Skipped! Data already processed on: {lastProcessingFinishedOn} (Duration was: {totalTime.Duration()}){GetParseDetails()}";
+			return $"Skipped! Data already processed on: {_lastRunFinishedOn} (Duration was: {_lastRunDuration}){GetParseDetails()}";
+		}
+
+		public HzzoDataProcessorStatusVm GetStatus() =>
+			new HzzoDataProcessorStatusVm(
+				_data.IsLoaded(),
+				_state,
+				_timesRan,
+				_lastRunFinishedOn,
+				_lastRunDuration);
+
+		public bool ClearData()
+		{
+			if (_state != ProcessorState.Running)
+			{
+				_data.Clear();
+				_state = ProcessorState.DataCleared;
+
+				return true;
+			}
+
+			return false;
 		}
 	}
 }

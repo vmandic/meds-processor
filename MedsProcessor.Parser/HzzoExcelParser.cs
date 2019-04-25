@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using MedsProcessor.Common;
 using MedsProcessor.Common.Extensions;
 using MedsProcessor.Common.Models;
 using NPOI.HSSF.UserModel;
@@ -103,86 +104,88 @@ namespace MedsProcessor.Parser
 
 						DrugApplicationType ParseNextDrugApplicationType()
 						{
-								var strVal = GetEnumStrVal();
+							var strVal = GetEnumStrVal();
 
-								return string.IsNullOrWhiteSpace(strVal)
-										? DrugApplicationType.Undefined
-										: EnumExtensions.Parse<DrugApplicationTypeShort, DrugApplicationType>(strVal);
+							return string.IsNullOrWhiteSpace(strVal)
+									? DrugApplicationType.Undefined
+									: EnumExtensions.Parse<DrugApplicationTypeShort, DrugApplicationType>(strVal);
 						}
 
 						DrugPrescriptionType ParseNextDrugPrescriptionType()
 						{
-								var strVal = GetEnumStrVal();
+							var strVal = GetEnumStrVal();
 
-								return string.IsNullOrWhiteSpace(strVal)
-										? DrugPrescriptionType.Unprescribed
-										: EnumExtensions.Parse<DrugPrescriptionTypeShort, DrugPrescriptionType>(strVal);
+							return string.IsNullOrWhiteSpace(strVal)
+									? DrugPrescriptionType.Unprescribed
+									: EnumExtensions.Parse<DrugPrescriptionTypeShort, DrugPrescriptionType>(strVal);
 						}
 
 						DrugApplicationTypeLimitation ParseNextDrugApplicationTypeLimitation()
 						{
-								var strVal = GetEnumStrVal();
+							var strVal = GetEnumStrVal();
 
-								return string.IsNullOrWhiteSpace(strVal)
-										? DrugApplicationTypeLimitation.Undefined
-										: EnumExtensions.Parse<DrugApplicationTypeLimitationShort, DrugApplicationTypeLimitation>(strVal);
+							return string.IsNullOrWhiteSpace(strVal)
+									? DrugApplicationTypeLimitation.Undefined
+									: EnumExtensions.Parse<DrugApplicationTypeLimitationShort, DrugApplicationTypeLimitation>(strVal);
 						}
 
 						for (; rowIndex <= totalRows; rowIndex++)
 						{
-								latestCol = colIndex = 0;
-								latestRow = rowIndex;
+							latestCol = colIndex = 0;
+							latestRow = rowIndex;
 
-								var (hasRow, atkCode) = TryGetNextString();
+							var (hasRow, atkCode) = TryGetNextString();
 
-								if (!hasRow) continue;
+							if (!hasRow) continue;
 
-								var importDto = new HzzoMedsImportDto();
+							var importDto = new HzzoMedsImportDto();
 
-								importDto.RowId = rowIndex;
-								importDto.ListType = listType;
-								importDto.ValidFrom = med.ValidFrom;
+							importDto.RowId = rowIndex;
+							importDto.ListType = listType;
+							importDto.ValidFrom = med.ValidFrom;
 
-								importDto.AtkCode = atkCode;
-								importDto.ApplicationTypeLimitation = ParseNextDrugApplicationTypeLimitation();
-								importDto.GenericName = GetNextString();
-								importDto.UnitOfDistribution = GetNextString();
-								importDto.UnitOfDistributionPriceWithoutPDV = GetNextDecimal();
-								importDto.UnitOfDistributionPriceWithPDV = GetNextDecimal();
-								importDto.ApplicationType = ParseNextDrugApplicationType();
-								importDto.ApprovedBy = isListStartingWith2014 ? GetNextString() : null;
-								importDto.Manufacturer = GetNextString();
-								importDto.RegisteredName = GetNextString();
-								importDto.OriginalPackagingDescription = GetNextString();
-								importDto.OriginalPackagingSingleUnitPriceWithoutPdv = GetNextDecimal();
-								importDto.OriginalPackagingSingleUnitPriceWithPdv = GetNextDecimal();
-								importDto.OriginalPackagingPriceWithoutPdv = GetNextDecimal();
-								importDto.OriginalPackagingPriceWithPdv = GetNextDecimal();
+							importDto.AtkCode = atkCode;
+							importDto.ApplicationTypeLimitation = ParseNextDrugApplicationTypeLimitation();
+							importDto.GenericName = GetNextString();
+							importDto.UnitOfDistribution = GetNextString();
+							importDto.UnitOfDistributionPriceWithoutPDV = GetNextDecimal();
+							importDto.UnitOfDistributionPriceWithPDV = GetNextDecimal();
+							importDto.ApplicationType = ParseNextDrugApplicationType();
+							importDto.ApprovedBy = isListStartingWith2014 ? GetNextString() : null;
+							importDto.Manufacturer = GetNextString();
+							importDto.RegisteredName = GetNextString();
+							importDto.OriginalPackagingDescription = GetNextString();
+							importDto.OriginalPackagingSingleUnitPriceWithoutPdv = GetNextDecimal();
+							importDto.OriginalPackagingSingleUnitPriceWithPdv = GetNextDecimal();
+							importDto.OriginalPackagingPriceWithoutPdv = GetNextDecimal();
+							importDto.OriginalPackagingPriceWithPdv = GetNextDecimal();
 
-								// NOTE: supplementary prices
-								if (listType == DrugListType.Supplementary)
-								{
-										importDto.OriginalPackagingSingleUnitPricePaidByHzzoWithoutPdv = GetNextDecimal();
-										importDto.OriginalPackagingSingleUnitPricePaidByHzzoWithPdv = GetNextDecimal();
-										importDto.OriginalPackagingPricePaidByHzzoWithoutPdv = GetNextDecimal();
-										importDto.OriginalPackagingPricePaidByHzzoWithPdv = GetNextDecimal();
-										importDto.OriginalPackagingSingleUnitPriceExtraChargeWithoutPdv = GetNextDecimal();
-										importDto.OriginalPackagingSingleUnitPriceExtraChargeWithPdv = GetNextDecimal();
-										importDto.OriginalPackagingPriceExtraChargeWithoutPdv = GetNextDecimal();
-										importDto.OriginalPackagingPriceExtraChargeWithPdv = GetNextDecimal();
-								}
-
-								importDto.PrescriptionType = ParseNextDrugPrescriptionType();
-								importDto.IndicationsCode = GetNextString();
-								importDto.DirectionsCode = GetNextString();
-								importDto.DrugGroupCode = GetNextString();
-								importDto.DrugGroup = GetNextString();
-								importDto.DrugSubgroupCode = GetNextString();
-								importDto.DrugSubgroup = GetNextString();
-
-								med.MedsList.Add(importDto);
+							// NOTE: supplementary prices
+							if (listType == DrugListType.Supplementary)
+							{
+									importDto.OriginalPackagingSingleUnitPricePaidByHzzoWithoutPdv = GetNextDecimal();
+									importDto.OriginalPackagingSingleUnitPricePaidByHzzoWithPdv = GetNextDecimal();
+									importDto.OriginalPackagingPricePaidByHzzoWithoutPdv = GetNextDecimal();
+									importDto.OriginalPackagingPricePaidByHzzoWithPdv = GetNextDecimal();
+									importDto.OriginalPackagingSingleUnitPriceExtraChargeWithoutPdv = GetNextDecimal();
+									importDto.OriginalPackagingSingleUnitPriceExtraChargeWithPdv = GetNextDecimal();
+									importDto.OriginalPackagingPriceExtraChargeWithoutPdv = GetNextDecimal();
+									importDto.OriginalPackagingPriceExtraChargeWithPdv = GetNextDecimal();
 							}
+
+							importDto.PrescriptionType = ParseNextDrugPrescriptionType();
+							importDto.IndicationsCode = GetNextString();
+							importDto.DirectionsCode = GetNextString();
+							importDto.DrugGroupCode = GetNextString();
+							importDto.DrugGroup = GetNextString();
+							importDto.DrugSubgroupCode = GetNextString();
+							importDto.DrugSubgroup = GetNextString();
+
+							med.MedsList.Add(importDto);
 						}
+					}
+
+					med.MarkAsParsed();
 				});
 			}
 			catch (Exception ex)

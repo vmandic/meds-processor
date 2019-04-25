@@ -1,7 +1,15 @@
 using System;
 
-namespace MedsProcessor.Parser
+namespace MedsProcessor.Common
 {
+	public enum ProcessorState
+	{
+		NotRan,
+		Ran,
+		DataCleared,
+		Running
+	}
+
 	public enum DrugListType
 	{
 		Undefined = 0,

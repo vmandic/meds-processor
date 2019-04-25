@@ -1,5 +1,5 @@
 using System;
-using MedsProcessor.Parser;
+using MedsProcessor.Common;
 
 namespace MedsProcessor.Common.Models
 {
