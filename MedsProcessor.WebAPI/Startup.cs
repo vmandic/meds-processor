@@ -47,6 +47,8 @@ namespace MedsProcessor.WebAPI
 						NamingStrategy = new SnakeCaseNamingStrategy()
 					};
 					opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+					opts.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+					opts.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
 					opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
 				})
 				.SetCompatibilityVersion(CompatibilityVersion.Version_2_1);

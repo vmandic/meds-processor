@@ -20,26 +20,18 @@ namespace MedsProcessor.WebAPI.Controllers
 			this._processor = processor;
 		}
 
-		[HttpGet("run/{force?}", Name = "Processor_Run")]
-		public async Task<ActionResult<ApiMessageResponse>> Run(bool force = false)
-		{
-			return Ok(ApiResponse.ForMessageOk(await _processor.Run(force)));
-		}
+		[HttpGet("run/{force?}")]
+		public async Task<ActionResult<ApiMessageResponse>> GetRun(bool force = false) =>
+			Ok(ApiResponse.ForMessageOk(await _processor.Run(force)));
 
 		[HttpGet("status", Name = "Processor_GetStatus")]
-		public ActionResult<ApiDataResponse<HzzoDataProcessorStatus>> GetStatus()
-		{
-			return Ok(ApiResponse.ForDataOk(_processor.GetStatus()));
-		}
+		public ActionResult<ApiDataResponse<HzzoDataProcessorStatus>> GetStatus() =>
+			Ok(ApiResponse.ForDataOk(_processor.GetStatus()));
 
-		[HttpGet("clear-data", Name = "Processor_ClearData")]
-		public ActionResult<ApiMessageResponse> ClearData()
-		{
-			var dataCleared = _processor.ClearData();
-
-			return Ok(ApiResponse.ForMessageOk(dataCleared
+		[HttpGet("clear-data")]
+		public ActionResult<ApiMessageResponse> GetClearData() =>
+			Ok(ApiResponse.ForMessageOk(_processor.ClearData()
 				? "Processor data cleared! You now must rerun the processor to continue using the API."
 				: "Processor is running... Data can not be cleared during processing! Try again later."));
-		}
 	}
 }

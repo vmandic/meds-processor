@@ -17,6 +17,9 @@ namespace MedsProcessor.Parser
 	public class HzzoExcelParser
 	{
 		private readonly ILogger<HzzoExcelParser> _logger;
+		private int _medsCount;
+		private int _parsedCount;
+
 		public HzzoExcelParser(ILogger<HzzoExcelParser> logger)
 		{
 			_logger = logger;
@@ -24,6 +27,9 @@ namespace MedsProcessor.Parser
 
 		public ISet<HzzoMedsDownloadDto> Run(ISet<HzzoMedsDownloadDto> meds)
 		{
+			_medsCount = meds.Count;
+			_parsedCount = 0;
+
 			Parallel.ForEach(new Action<ISet<HzzoMedsDownloadDto>>[]
 			{
 					ParsePrimaryListsStartingWith2014_02,
@@ -32,10 +38,14 @@ namespace MedsProcessor.Parser
 					ParseSupplementaryListsUpTo2014_01
 			}, parser => parser(meds));
 
+			_logger.LogInformation("Parser complete!");
 			return meds;
 		}
 
-		ISheet OpenWorkbookSheetWithNpoi(FileStream stream, HzzoMedsDownloadDto med, HzzoMedsDownloadDto latestMed)
+		ISheet OpenWorkbookSheetWithNpoi(
+			FileStream stream,
+			HzzoMedsDownloadDto med,
+			HzzoMedsDownloadDto latestMed)
 		{
 			ISheet drugListSheet = null;
 
@@ -72,8 +82,6 @@ namespace MedsProcessor.Parser
 				Parallel.ForEach(filteredMeds, med =>
 				{
 					latestMed = med;
-					_logger.LogInformation("Started parsing document: '{filename}'", med.FileName);
-
 					using(var stream = File.Open(med.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 					{
 						var drugListSheet = OpenWorkbookSheetWithNpoi(stream, med, latestMed);
@@ -195,15 +203,20 @@ namespace MedsProcessor.Parser
 					}
 
 					med.MarkAsParsed();
-					_logger.LogInformation("Finished parsing document: '{filename}'", med.FileName);
+
+					_logger.LogInformation(
+						"Parsed document ({parsedCount}/{medsCount}): '{filename}'",
+						++_parsedCount,
+						_medsCount,
+						med.FileName);
 				});
 			}
 			catch (Exception ex)
 			{
 				var str = new StringBuilder()
-					.AppendLine("latest med: ").Append(latestMed.FileName)
-					.AppendLine("latest row: ").Append(latestRow)
-					.AppendLine("latest col: ").Append(latestCol);
+					.AppendLine(" latest med: ").Append(latestMed.FileName)
+					.AppendLine(" latest row: ").Append(latestRow)
+					.AppendLine(" latest col: ").Append(latestCol);
 
 				throw new InvalidOperationException(str.ToString(), ex);
 			}

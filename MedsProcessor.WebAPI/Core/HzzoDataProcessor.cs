@@ -40,8 +40,7 @@ namespace MedsProcessor.WebAPI.Core
 			Environment.NewLine +
 			$"Total records parsed: {_data.Set.SelectMany(x => x.MedsList).Count()}" +
 			Environment.NewLine +
-			Environment.NewLine +
-			string.Join(Environment.NewLine, _data.Set.Select(x => x.FileName));
+			$"Documents: {string.Join(Environment.NewLine, _data.Set.Select(x => x.FileName))}";
 
 		public async Task<string> Run(bool force = false)
 		{

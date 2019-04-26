@@ -29,7 +29,7 @@ namespace MedsProcessor.Downloader
 			var parallelismDegree = 5;
 			var waitBetweenRequestsMs = 500;
 
-			var notDownloadedCount = meds.Count(x => force || !x.IsAlreadyDownloaded);
+			var notDownloadedCount = meds.Count(x => force || !x.IsDownloaded);
 
 			for (int i = 0; i < notDownloadedCount; i += parallelismDegree)
 			{

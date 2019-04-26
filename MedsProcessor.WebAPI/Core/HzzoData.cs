@@ -36,7 +36,7 @@ namespace MedsProcessor.WebAPI.Core
 			Set = data;
 
 		internal bool IsLoaded() =>
-			_set != null && _set.All(x => x.IsAlreadyDownloaded && x.IsDataParsed);
+			_set != null && _set.All(x => x.IsDownloaded && x.IsDataParsed);
 
 		internal void Clear()
 		{

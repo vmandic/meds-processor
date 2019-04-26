@@ -2,12 +2,12 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
 
 namespace MedsProcessor.Common.Models
 {
-	public class HzzoMedsDownloadDto
+    public class HzzoMedsDownloadDto
 	{
 		private readonly string _rootLocation;
 
@@ -18,24 +18,27 @@ namespace MedsProcessor.Common.Models
 			this._rootLocation = rootLocation;
 		}
 
+		[JsonIgnore]
 		public string FilePath =>
 			Path.Combine(_rootLocation, FileName);
 
-		public bool IsAlreadyDownloaded =>
+		[JsonIgnore]
+		public bool IsDownloaded =>
 			File.Exists(FilePath);
 
+		[JsonIgnore]
 		public string FileName =>
 			ValidFrom.ToString("yyyy-MM-dd_") +
 			(Href.Split('/').LastOrDefault() ?? Href.Replace("/", "_").Replace(":", "_")).TrimEnd();
 
 		public ISet<HzzoMedsImportDto> MedsList { get; } = new HashSet<HzzoMedsImportDto>();
-
 		public string Href { get; set; }
 		public DateTime ValidFrom { get; private set; }
 
-		[IgnoreDataMember]
+		[JsonIgnore]
 		public Task<Stream> DocumentStream { get; set; }
 
+		[JsonIgnore]
 		public bool IsDataParsed { get; private set; }
 
 		public void MarkAsParsed() =>
