@@ -1,7 +1,8 @@
-﻿using MedsProcessor.Common.Models;
+using MedsProcessor.Common.Models;
 using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
+using MedsProcessor.WebAPI.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -13,7 +14,7 @@ using Newtonsoft.Json.Serialization;
 
 namespace MedsProcessor.WebAPI
 {
-    public class Startup
+	public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
@@ -54,14 +55,16 @@ namespace MedsProcessor.WebAPI
 		// This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
 		public void Configure(IApplicationBuilder app, IHostingEnvironment env)
 		{
-			if (env.IsDevelopment())
-			{
-				app.UseDeveloperExceptionPage();
-			}
-			else
+			if (!env.IsDevelopment())
 			{
 				app.UseHsts();
 			}
+
+			// Handles exceptions and generates a custom response body
+			app.UseExceptionHandler("/error/500");
+
+			// Handles non-success status codes with empty body
+			app.UseStatusCodePagesWithReExecute("/error/{0}");
 
 			app.UseHttpsRedirection();
 			app.UseResponseCompression();

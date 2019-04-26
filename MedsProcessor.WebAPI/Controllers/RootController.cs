@@ -28,7 +28,7 @@ namespace MedsProcessor.WebAPI.Controllers
 			sb.Append("You can clear the loaded data at: ").AppendLine(clearDataUrl);
 			sb.Append("You can restart the processor at: ").AppendLine(rerunUrl);
 
-			return Ok(sb.ToString());
+			return Ok(ApiResponse.ForMessageOk(sb.ToString()));
 		}
 	}
 }

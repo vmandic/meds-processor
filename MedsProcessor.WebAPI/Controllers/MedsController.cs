@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using MedsProcessor.Common;
 using MedsProcessor.Common.Models;
+using MedsProcessor.WebAPI.Core;
+using MedsProcessor.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
@@ -24,14 +26,14 @@ namespace MedsProcessor.WebAPI.Controllers
 			}
 
 			[HttpGet("list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
-			public ActionResult<IEnumerable<HzzoMedsImportDto>> DumpJson(ListType type, string years = null)
+			public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> DumpJson(ListType type, string years = null)
 			{
 				var result = _data.Set.SelectMany(x => x.MedsList);
 
 				result = FilterByType(type, result);
 				result = FilterByYears(years, result);
 
-				return Ok(result);
+				return Ok(ApiResponse.ForDataOk(result));
 			}
 
 			private static IEnumerable<HzzoMedsImportDto> FilterByYears(string years, IEnumerable<HzzoMedsImportDto> result)
@@ -57,7 +59,7 @@ namespace MedsProcessor.WebAPI.Controllers
 			}
 
 			[HttpGet("search/{searchQuery:length(1,50)}")]
-			public ActionResult<IEnumerable<HzzoMedsImportDto>> SearchForDrug(string searchQuery)
+			public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> SearchForDrug(string searchQuery)
 			{
 				var result = _data.Set.SelectMany(x => x.MedsList);
 
@@ -77,7 +79,7 @@ namespace MedsProcessor.WebAPI.Controllers
 						x.DrugSubgroup,
 						x.OriginalPackagingDescription));
 
-					return Ok(result);
+					return Ok(ApiResponse.ForDataOk(result));
 				}
 			}
 		}

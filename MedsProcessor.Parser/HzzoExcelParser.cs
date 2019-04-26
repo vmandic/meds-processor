@@ -10,11 +10,18 @@ using MedsProcessor.Common.Models;
 using NPOI.HSSF.UserModel;
 using NPOI.SS.UserModel;
 using NPOI.XSSF.UserModel;
+using Microsoft.Extensions.Logging;
 
 namespace MedsProcessor.Parser
 {
 	public class HzzoExcelParser
 	{
+		private readonly ILogger<HzzoExcelParser> _logger;
+		public HzzoExcelParser(ILogger<HzzoExcelParser> logger)
+		{
+			_logger = logger;
+		}
+
 		public ISet<HzzoMedsDownloadDto> Run(ISet<HzzoMedsDownloadDto> meds)
 		{
 			Parallel.ForEach(new Action<ISet<HzzoMedsDownloadDto>>[]
@@ -28,7 +35,7 @@ namespace MedsProcessor.Parser
 			return meds;
 		}
 
-		static ISheet OpenWorkbookSheetWithNpoi(FileStream stream, HzzoMedsDownloadDto med, HzzoMedsDownloadDto latestMed)
+		ISheet OpenWorkbookSheetWithNpoi(FileStream stream, HzzoMedsDownloadDto med, HzzoMedsDownloadDto latestMed)
 		{
 			ISheet drugListSheet = null;
 
@@ -45,10 +52,10 @@ namespace MedsProcessor.Parser
 					drugListSheet = xssfWorkbook.GetSheetAt(0);
 				}
 			}
-			catch
+			catch(Exception ex)
 			{
-				// TODO: log error, awh we will do that l8er
 				latestMed.Href += " - WORKSHEET COULD NOT BE PARSED";
+				_logger.LogError(ex, latestMed.Href);
 			}
 
 			return drugListSheet;
@@ -65,6 +72,8 @@ namespace MedsProcessor.Parser
 				Parallel.ForEach(filteredMeds, med =>
 				{
 					latestMed = med;
+					_logger.LogInformation("Started parsing document: '{filename}'", med.FileName);
+
 					using(var stream = File.Open(med.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
 					{
 						var drugListSheet = OpenWorkbookSheetWithNpoi(stream, med, latestMed);
@@ -186,6 +195,7 @@ namespace MedsProcessor.Parser
 					}
 
 					med.MarkAsParsed();
+					_logger.LogInformation("Finished parsing document: '{filename}'", med.FileName);
 				});
 			}
 			catch (Exception ex)
