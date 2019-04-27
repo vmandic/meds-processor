@@ -55,7 +55,7 @@ namespace MedsProcessor.WebAPI.Core
 					{
 						if (force)
 						{
-							_data.Clear();
+							ClearData();
 						}
 
 						_state = ProcessorState.Running;

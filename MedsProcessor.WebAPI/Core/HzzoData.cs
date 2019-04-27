@@ -43,7 +43,7 @@ namespace MedsProcessor.WebAPI.Core
 			_set = null;
 
 			var downloadDir = Path.Combine(_appPaths.ApplicationRootPath, Constants.DOWNLOAD_DIR);
-			Directory.Delete(_appPaths.ApplicationRootPath);
+			Directory.Delete(downloadDir, true);
 		}
 	}
 }

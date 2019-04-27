@@ -12,7 +12,7 @@ namespace MedsProcessor.Common.Models
 		{
 			this.IsDataLoaded = wasDataLoaded;
 			this.TimesProcessorHasRan = timesRan;
-			this.HasProcessorRan = processorState;
+			this.ProcessorState = processorState;
 		}
 
 		public HzzoDataProcessorStatus(
@@ -34,12 +34,12 @@ namespace MedsProcessor.Common.Models
 
 		public TimeSpan? LastRunStartedBefore =>
 			LastRunFinishedOn.HasValue
-				? DateTime.Now.Subtract(LastRunStartedOn.Value)
+				? LastRunStartedOn.Value.Subtract(DateTime.Now)
 				: (TimeSpan?) null;
 
 		public DateTime? LastRunFinishedOn { get; }
 		public TimeSpan? LastRunDuration { get; }
 		public int TimesProcessorHasRan { get; }
-		public ProcessorState HasProcessorRan { get; }
+		public ProcessorState ProcessorState { get; }
 	}
 }
