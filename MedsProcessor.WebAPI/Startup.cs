@@ -9,8 +9,6 @@ using MedsProcessor.WebAPI.Core;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Formatters;
-using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Newtonsoft.Json;
@@ -20,7 +18,7 @@ using Swashbuckle.AspNetCore.Swagger;
 
 namespace MedsProcessor.WebAPI
 {
-	public class Startup
+    public class Startup
 	{
 		public Startup(IConfiguration configuration)
 		{
@@ -106,13 +104,7 @@ namespace MedsProcessor.WebAPI
 				c.SwaggerEndpoint("/swagger/v1/swagger.json", "HZZO meds-processor v1");
 			});
 
-			app.UseMvc(route =>
-			{
-				route.MapRoute(
-					name: "default",
-					template: "api/v{version:apiVersion}/{controller}/{action}/{id?}",
-					defaults : new { controller = "Home", action = "Index" });
-			});
+			app.UseMvc();
 		}
 	}
 }
