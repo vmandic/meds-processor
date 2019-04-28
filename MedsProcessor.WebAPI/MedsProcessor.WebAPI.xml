@@ -17,7 +17,7 @@
             </summary>
             <returns>Returns a JSON formatted message with basic Web API info.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.MedsController.DumpJson(MedsProcessor.WebAPI.Controllers.MedsController.ListType,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetDumpJson(MedsProcessor.WebAPI.Controllers.v1.DrugsController.ListType,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Gets a list of drugs by specifying the type and year(s).
             </summary>
@@ -27,7 +27,7 @@
             <param name="size">Number of items per page to retrieve.</param>
             <returns>Returns a paged JSON list of drugs filtered by query parameters.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.MedsController.SearchForDrug(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetSearchForDrug(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Searches for all drugs containing the search query parameter in any of the following parameters:
             GenericName, RegisteredName, Manufacturer, ApprovedBy, DrugGroup, DrugSubgroup and OriginalPackagingDescription.
@@ -37,7 +37,7 @@
             <param name="size">Number of items per page to retrieve.</param>
             <returns>Returns a paged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.ProcessorController.GetRun(System.Boolean)">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetRun(System.Boolean)">
             <summary>
             Starts the meds processor to scrape, download and parse remote .xls(x) documents from the specified Croatia's HZZO web domains.
             <para/>
@@ -48,19 +48,19 @@
             <param name="force">Specify if a processor re-execution will be enforeced.</param>
             <returns>Returns a JSON formatted message with the information about the processor run including info about processed documents and time of processing.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.ProcessorController.GetStatus">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetStatus">
             <summary>
             Gets information about the current state of the processor such as execution times and if the processor has successfully ran to completion.
             </summary>
             <returns>Returns a JSON formatted message informing about the status of the processor.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.ProcessorController.GetClearData">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetClearData">
             <summary>
             Trys deleting the downloaded .xls(x) documents from the disk and clearing the in-memory dataset of 			loaded meds.
             <para/>
             The action can not be performed if processor is currently executing.
             <para/>
-            The internal method is called by a force=true call to the action method: <see 			cref="M:MedsProcessor.WebAPI.Controllers.ProcessorController.GetRun(System.Boolean)"/>.
+            The internal method is called by a force=true call to the action method: <see 			cref="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetRun(System.Boolean)"/>.
             </summary>
             <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
         </member>

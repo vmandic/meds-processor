@@ -7,10 +7,10 @@ using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers
+namespace MedsProcessor.WebAPI.Controllers.v1
 {
 	[ProducesResponseType(200), ProducesResponseType(400), ProducesResponseType(500)]
-	public class MedsController : ApiV1ControllerBase
+	public class DrugsController : ApiV1ControllerBase
 	{
 		public enum ListType
 		{
@@ -20,7 +20,7 @@ namespace MedsProcessor.WebAPI.Controllers
 		}
 
 		private readonly HzzoData _data;
-		public MedsController(HzzoData data)
+		public DrugsController(HzzoData data)
 		{
 			this._data = data;
 		}
@@ -34,7 +34,7 @@ namespace MedsProcessor.WebAPI.Controllers
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged JSON list of drugs filtered by query parameters.</returns>
 		[HttpGet("list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
-		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> DumpJson(
+		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetDumpJson(
 			ListType type,
 			string years = null,
 			int? page = null,
@@ -59,7 +59,7 @@ namespace MedsProcessor.WebAPI.Controllers
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
 		[HttpGet("search/{searchQuery:length(1,50)}")]
-		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> SearchForDrug(
+		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetSearchForDrug(
 			string searchQuery,
 			int? page = null,
 			int? size = null)
@@ -86,6 +86,24 @@ namespace MedsProcessor.WebAPI.Controllers
 
 			return ApiHttpResponse.ForPage(result, page, size);
 		}
+
+		// TODO: finish implementation
+		// [HttpGet("overview/{atkCode:length(11,12)}")]
+		// public ActionResult GetDrugPriceHistory(string atkCode)
+		// {
+		// 	if (atkCode.Length == 11)
+		// 	{
+		// 		atkCode = atkCode.Insert(8, " ");
+		// 	}
+
+		// 	atkCode = atkCode.ToUpper();
+
+		// 	var result = _data.Set
+		// 		.SelectMany(x => x.MedsList)
+		// 		.Where(x => x.AtkCode == atkCode);
+
+		// 	return ApiHttpResponse.ForData(result);
+		// }
 
 		private static IEnumerable<HzzoMedsImportDto> FilterByYears(
 			string years,

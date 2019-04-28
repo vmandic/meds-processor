@@ -8,7 +8,7 @@ using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers
+namespace MedsProcessor.WebAPI.Controllers.v1
 {
 	[ProducesResponseType(200), ProducesResponseType(400), ProducesResponseType(500)]
 	public class ProcessorController : ApiV1ControllerBase
