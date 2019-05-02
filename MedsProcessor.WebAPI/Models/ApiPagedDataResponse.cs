@@ -2,9 +2,9 @@ using System;
 
 namespace MedsProcessor.WebAPI.Models
 {
-	public class ApiPageResponse<TObjectModel> : ApiDataResponse<TObjectModel>
+	public class ApiPagedDataResponse<TObjectModel> : ApiDataResponse<TObjectModel>
 	{
-		public ApiPageResponse(
+		public ApiPagedDataResponse(
 			int statusCode,
 			TObjectModel model,
 			int pageNumber,

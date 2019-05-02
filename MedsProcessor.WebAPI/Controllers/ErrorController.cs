@@ -1,3 +1,5 @@
+using MedsProcessor.WebAPI.Models;
+using MedsProcessor.WebAPI.Utils;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
@@ -12,13 +14,14 @@ namespace MedsProcessor.WebAPI.Controllers
 		/// <param name="code">A HTTP status code indicating the specific error.</param>
 		/// <returns>Returns a JSON formatted message which will contain exception details if possible.</returns>
 		[HttpGet("{code}")]
-		public IActionResult GetError(int code)
+		[Produces(typeof(ApiDataResponse<System.Exception>))]
+		public ActionResult<ApiHttpResponse> GetError(int code)
 		{
 			var exFeat = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
 			return exFeat == null
-				? ApiHttpResponse.ForCode(code)
-				: ApiHttpResponse.ForData(exFeat.Error, code, exFeat.Error.Message);
+				? ApiResponse.ForCode(code)
+				: ApiResponse.ForData(exFeat.Error, code, exFeat.Error.Message);
 		}
 	}
 }

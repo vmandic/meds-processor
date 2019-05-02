@@ -100,9 +100,7 @@ namespace MedsProcessor.WebAPI
 
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
 			app.UseSwaggerUI(c =>
-			{
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "HZZO meds-processor v1");
-			});
+				c.SwaggerEndpoint("/swagger/v1/swagger.json", "HZZO meds-processor v1"));
 
 			app.UseMvc();
 		}

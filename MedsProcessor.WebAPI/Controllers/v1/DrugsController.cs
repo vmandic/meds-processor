@@ -5,14 +5,14 @@ using MedsProcessor.Common;
 using MedsProcessor.Common.Models;
 using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
+using MedsProcessor.WebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers.v1
 {
-	[ProducesResponseType(200), ProducesResponseType(400), ProducesResponseType(500)]
 	public class DrugsController : ApiV1ControllerBase
 	{
-		public enum ListType
+		public enum DrugListTypeFilter
 		{
 			All = DrugListType.Undefined,
 			Primary = DrugListType.Primary,
@@ -34,20 +34,20 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged JSON list of drugs filtered by query parameters.</returns>
 		[HttpGet("list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
-		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetDumpJson(
-			ListType type,
+		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
+		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
+		public ActionResult GetDumpJson(
+			DrugListTypeFilter type,
 			string years = null,
 			int? page = null,
 			int? size = null)
 		{
-			var result = _data.Set.SelectMany(x => x.MedsList);
-			size = size ?? result.Count();
+			var result =
+				FilterByYears(years,
+					FilterByType(type,
+						_data.Set.SelectMany(x => x.MedsList)));
 
-			result = FilterByType(type, result);
-			result = FilterByYears(years, result);
-			result = GetPage(page, size, result);
-
-			return ApiHttpResponse.ForPage(result, page, size);
+			return ApiResponse.TryForPagedData(result, page, size);
 		}
 
 		/// <summary>
@@ -59,51 +59,80 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
 		[HttpGet("search/{searchQuery:length(1,50)}")]
-		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetSearchForDrug(
+		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
+		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
+		public ActionResult GetSearchForDrug(
 			string searchQuery,
 			int? page = null,
 			int? size = null)
 		{
-			var result = _data.Set.SelectMany(x => x.MedsList);
-
 			bool ContainsSearchForProp(string str) =>
 				str.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
 
 			bool ContainsSearchForAnyOf(params string[] args) =>
 				args.AsEnumerable().Any(ContainsSearchForProp);
 
-			result = result.Where(x =>
-				ContainsSearchForAnyOf(
-					x.GenericName,
-					x.RegisteredName,
-					x.Manufacturer,
-					x.ApprovedBy,
-					x.DrugGroup,
-					x.DrugSubgroup,
-					x.OriginalPackagingDescription));
+			var result = _data.Set
+				.SelectMany(x => x.MedsList)
+				.Where(x =>
+					ContainsSearchForAnyOf(
+						x.GenericName,
+						x.RegisteredName,
+						x.Manufacturer,
+						x.ApprovedBy,
+						x.DrugGroup,
+						x.DrugSubgroup,
+						x.OriginalPackagingDescription));
 
-			result = GetPage(page, size, result);
-
-			return ApiHttpResponse.ForPage(result, page, size);
+			return ApiResponse.TryForPagedData(result, page, size);
 		}
 
-		// TODO: finish implementation
-		// [HttpGet("overview/{atkCode:length(11,12)}")]
-		// public ActionResult GetDrugPriceHistory(string atkCode)
-		// {
-		// 	if (atkCode.Length == 11)
-		// 	{
-		// 		atkCode = atkCode.Insert(8, " ");
-		// 	}
+		/// <summary>
+		/// Searches for all drugs matching the drug ATK code parameter.
+		/// </summary>
+		/// <param name="atkCode">The unique ATK code of a drug or medicine usually in lenght of 10 to 12 charaters including a blank space on the third from the end index of the string. Minimum length of the parameter is 4 and maximum 12 characters.</param>
+		/// <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>
+		[HttpGet("search/atk/{atkCode:length(4,12)}")]
+		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByAtkCode(
+			string atkCode)
+		{
+			if (atkCode.Reverse().ToArray() [3] != ' ')
+			{
+				atkCode = atkCode.Insert(atkCode.Length - 3, " ");
+			}
 
-		// 	atkCode = atkCode.ToUpper();
+			atkCode = atkCode.ToUpper();
 
-		// 	var result = _data.Set
-		// 		.SelectMany(x => x.MedsList)
-		// 		.Where(x => x.AtkCode == atkCode);
+			var result = _data.Set
+				.SelectMany(x => x.MedsList)
+				.Where(x => x.AtkCode.ToUpper() == atkCode)
+				.OrderBy(x => x.ValidFrom);
 
-		// 	return ApiHttpResponse.ForData(result);
-		// }
+			return ApiResponse.ForData(
+				result,
+				message: $"Total results for atk code '{atkCode}': {result.Count()}");
+		}
+
+		/// <summary>
+		/// Searches for all drugs produced by a manufacturer. The lookup works by checking if the manufacturer name contains the provided manufacturer parameter.
+		/// </summary>
+		/// <param name="manufacturer">The drug manufacturer. Can ba a part of the full name of a manufacturer.</param>
+		/// <returns>Returns a JSON list containing the found drugs mateched by the provided manufacturer query parameter.</returns>
+		[HttpGet("search/manufacturer/{manufacturer:length(1,50)}")]
+		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByManufacturer(
+			string manufacturer)
+		{
+			manufacturer = manufacturer.ToUpper().Trim();
+
+			var result = _data.Set
+				.SelectMany(x => x.MedsList)
+				.Where(x => x.Manufacturer.ToUpper().Contains(manufacturer))
+				.OrderBy(x => x.ValidFrom);
+
+			return ApiResponse.ForData(
+				result,
+				message: $"Total results where manufacturer contains '{manufacturer}': {result.Count()}");
+		}
 
 		private static IEnumerable<HzzoMedsImportDto> FilterByYears(
 			string years,
@@ -111,7 +140,12 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		{
 			if (!string.IsNullOrEmpty(years))
 			{
-				var filter = years.Split(",").Where(x => !string.IsNullOrEmpty(x)).Select(int.Parse);
+				var filter = years
+					.Split(",")
+					.Where(x => !string.IsNullOrEmpty(x))
+					.Select(int.Parse)
+					.ToList();
+
 				result = result.Where(x => filter.Contains(x.ValidFrom.Year));
 			}
 
@@ -119,10 +153,10 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		}
 
 		private static IEnumerable<HzzoMedsImportDto> FilterByType(
-			ListType type,
+			DrugListTypeFilter type,
 			IEnumerable<HzzoMedsImportDto> result)
 		{
-			if (type != ListType.All)
+			if (type != DrugListTypeFilter.All)
 			{
 				var targetType = (DrugListType) (int) type;
 				result = result.Where(x => x.ListType == targetType);
@@ -130,13 +164,5 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 
 			return result;
 		}
-
-		private static IEnumerable<HzzoMedsImportDto> GetPage(
-				int? page,
-				int? size,
-				IEnumerable<HzzoMedsImportDto> result) =>
-			result
-			.Skip(((page ?? Constants.PAGE_NUMBER) - 1) * (size ?? Constants.PAGE_SIZE))
-			.Take(size ?? Constants.PAGE_SIZE);
 	}
 }

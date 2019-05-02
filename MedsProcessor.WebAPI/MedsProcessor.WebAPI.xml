@@ -17,7 +17,7 @@
             </summary>
             <returns>Returns a JSON formatted message with basic Web API info.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetDumpJson(MedsProcessor.WebAPI.Controllers.v1.DrugsController.ListType,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetDumpJson(MedsProcessor.WebAPI.Controllers.v1.DrugsController.DrugListTypeFilter,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Gets a list of drugs by specifying the type and year(s).
             </summary>
@@ -36,6 +36,20 @@
             <param name="page">Page number of items being retrieved.</param>
             <param name="size">Number of items per page to retrieve.</param>
             <returns>Returns a paged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetListByAtkCode(System.String)">
+            <summary>
+            Searches for all drugs matching the drug ATK code parameter.
+            </summary>
+            <param name="atkCode">The unique ATK code of a drug or medicine usually in lenght of 10 to 12 charaters including a blank space on the third from the end index of the string. Minimum length of the parameter is 4 and maximum 12 characters.</param>
+            <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1.DrugsController.GetListByManufacturer(System.String)">
+            <summary>
+            Searches for all drugs produced by a manufacturer. The lookup works by checking if the manufacturer name contains the provided manufacturer parameter.
+            </summary>
+            <param name="manufacturer">The drug manufacturer. Can ba a part of the full name of a manufacturer.</param>
+            <returns>Returns a JSON list containing the found drugs mateched by the provided manufacturer query parameter.</returns>
         </member>
         <member name="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetRun(System.Boolean)">
             <summary>
@@ -56,11 +70,11 @@
         </member>
         <member name="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetClearData">
             <summary>
-            Trys deleting the downloaded .xls(x) documents from the disk and clearing the in-memory dataset of 			loaded meds.
+            Trys deleting the downloaded .xls(x) documents from the disk and clearing the in-memory dataset of loaded meds.
             <para/>
             The action can not be performed if processor is currently executing.
             <para/>
-            The internal method is called by a force=true call to the action method: <see 			cref="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetRun(System.Boolean)"/>.
+            The internal method is called by a force=true call to the action method: <see cref="M:MedsProcessor.WebAPI.Controllers.v1.ProcessorController.GetRun(System.Boolean)"/>.
             </summary>
             <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
         </member>
