@@ -29,11 +29,11 @@ namespace MedsProcessor.WebAPI.Extensions
 			services.AddSwaggerGen(opts =>
 			{
 				opts.SwaggerDoc(
-					"v1",
+					"v1-0",
 					new Info
 					{
-						Title = "HZZO meds-processor v1",
-							Version = "v1"
+						Title = "HZZO meds-processor v1.0",
+							Version = "1.0"
 					});
 
 				// Setup swagger to use msbuild documentation:
@@ -94,7 +94,7 @@ namespace MedsProcessor.WebAPI.Extensions
 			services.AddSingleton<HzzoDataProcessor>();
 			services.AddSingleton<HzzoData>();
 
-			services.AddScoped<JwtAuthService>();
+			services.AddScoped<IJwtAuthService, JwtAuthService>();
 
 			return services;
 		}

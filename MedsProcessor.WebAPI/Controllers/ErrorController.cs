@@ -9,10 +9,11 @@ namespace MedsProcessor.WebAPI.Controllers
 	public class ErrorController : ControllerBase
 	{
 		/// <summary>
-		/// Catches and handles global exceptions by intercepting HTTP errors by provided HTTP status code in the query parameter.
+		/// Catches and handles global exceptions by intercepting HTTP errors specified through the URL.
 		/// </summary>
-		/// <param name="code">A HTTP status code indicating the specific error.</param>
-		/// <returns>Returns a JSON formatted message which will contain exception details if possible.</returns>
+		/// <param name="code">A HTTP status code indicating the specific error which will become the status code of the response itself.</param>
+		/// <returns>Returns a JSON formatted message which will contain exception details if the framework can resolve the latest error.</returns>
+		/// <remarks>Produces a HTTP response with status code takend from the URL.</remarks>
 		[HttpGet("{code}")]
 		[Produces(typeof(ApiDataResponse<System.Exception>))]
 		public ActionResult<ApiHttpResponse> GetError(int code)

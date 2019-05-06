@@ -10,24 +10,21 @@ namespace MedsProcessor.WebAPI.Controllers
 	[ProducesResponseType(200), ProducesResponseType(400), ProducesResponseType(500)]
 	public class AuthController : ControllerBase
 	{
-		private readonly JwtAuthService authService;
-		public AuthController(JwtAuthService authService)
+		private readonly IJwtAuthService jwtService;
+		public AuthController(IJwtAuthService jwtService)
 		{
-			this.authService = authService;
+			this.jwtService = jwtService;
 		}
 
 		[AllowAnonymous, HttpPost("token")]
-		[ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public ActionResult<string> RequestToken([FromBody] AuthTokenRequest request)
+		[Consumes("application/json"), ProducesResponseType(StatusCodes.Status401Unauthorized)]
+		public ActionResult RequestToken([FromBody] AuthTokenRequest request)
 		{
-			var(authenticatedSuccessfully, token) = authService.IssueToken(request);
+			var(authenticatedSuccessfully, token) = jwtService.IssueToken(request);
 
-			if (authenticatedSuccessfully)
-			{
-				return Ok(token);
-			}
-
-			return Unauthorized();
+			return authenticatedSuccessfully
+				? (ActionResult) Ok(token)
+				: Unauthorized();
 		}
 	}
 }

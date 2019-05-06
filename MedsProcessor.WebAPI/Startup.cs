@@ -2,6 +2,8 @@ using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.Versioning;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -22,7 +24,12 @@ namespace MedsProcessor.WebAPI
 			services.AddHttpClient();
 			services.AddAngleSharp();
 			services.AddResponseCompression();
-			services.AddApiVersioning();
+			services.AddApiVersioning(opts =>
+			{
+				opts.DefaultApiVersion = new ApiVersion(1, 0);
+				opts.AssumeDefaultVersionWhenUnspecified = true;
+				opts.ReportApiVersions = true;
+			});
 			services.ConfigureDependencies();
 			services.ConfigureAuthentication(Configuration);
 			services.ConfigureMvc();
@@ -50,6 +57,7 @@ namespace MedsProcessor.WebAPI
 			// Authorize access to the Swagger documentation site for non local requests
 			app.UseBasicAuthentication(opts =>
 			{
+				opts.AuthorizeLocalRequest = false;
 				opts.AuthorizeRoutes("/swagger");
 				opts.Username = "admin";
 				opts.Password = "admin";
@@ -62,7 +70,7 @@ namespace MedsProcessor.WebAPI
 			app.UseSwagger();
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
 			app.UseSwaggerUI(c =>
-				c.SwaggerEndpoint("/swagger/v1/swagger.json", "HZZO meds-processor v1"));
+				c.SwaggerEndpoint("/swagger/v1-0/swagger.json", "HZZO meds-processor v1.0"));
 
 			app.UseMvc();
 		}

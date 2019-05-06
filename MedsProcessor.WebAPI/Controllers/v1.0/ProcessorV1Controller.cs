@@ -9,13 +9,13 @@ using MedsProcessor.WebAPI.Models;
 using MedsProcessor.WebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers.v1
+namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
-	public class ProcessorController : ApiV1ControllerBase
+	public class ProcessorV1Controller : ApiV1ControllerBase
 	{
 		private readonly HzzoDataProcessor _processor;
 
-		public ProcessorController(HzzoDataProcessor processor)
+		public ProcessorV1Controller(HzzoDataProcessor processor)
 		{
 			this._processor = processor;
 		}
@@ -29,7 +29,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// </summary>
 		/// <param name="force">Specify if a processor re-execution will be enforeced.</param>
 		/// <returns>Returns a JSON formatted message with the information about the processor run including info about processed documents and time of processing.</returns>
-		[HttpGet("run/{force?}")]
+		[HttpGet("processor/run/{force?}")]
 		public async Task<ActionResult<ApiMessageResponse>> GetRun(bool force = false) =>
 			ApiResponse.ForMessage(await _processor.Run(force));
 
@@ -37,7 +37,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// Gets information about the current state of the processor such as execution times and if the processor has successfully ran to completion.
 		/// </summary>
 		/// <returns>Returns a JSON formatted message informing about the status of the processor.</returns>
-		[HttpGet("status", Name = "Processor_GetStatus")]
+		[HttpGet("processor/status", Name = "v1.0_Processor_GetStatus")]
 		public ActionResult<ApiDataResponse<HzzoDataProcessorStatus>> GetStatus() =>
 			ApiResponse.ForData(_processor.GetStatus());
 
@@ -46,13 +46,13 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <para/>
 		/// The action can not be performed if processor is currently executing.
 		/// <para/>
-		/// The internal method is called by a force=true call to the action method: <see cref="ProcessorController.GetRun(bool)"/>.
+		/// The internal method is called by a force=true call to the action method: <see cref="ProcessorV1Controller.GetRun(bool)"/>.
 		/// </summary>
 		/// <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
-		[HttpGet("clear-data")]
+		[HttpGet("processor/clear-data")]
 		public ActionResult<ApiMessageResponse> GetClearData() =>
-			ApiResponse.ForMessage(_processor.ClearData() ?
-				"Processor data cleared! You now must rerun the processor to continue using the API." :
-				"Processor is running... Data can not be cleared during processing! Try again later.");
+			ApiResponse.ForMessage(_processor.ClearData()
+			? "Processor data cleared! You now must rerun the processor to continue using the API."
+			: "Processor is running... Data can not be cleared during processing! Try again later.");
 	}
 }

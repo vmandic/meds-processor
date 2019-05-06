@@ -8,7 +8,12 @@ using Microsoft.IdentityModel.Tokens;
 
 namespace MedsProcessor.WebAPI.Utils
 {
-	public class JwtAuthService
+	public interface IJwtAuthService
+	{
+		(bool authenticatedSuccessfully, string token) IssueToken(AuthTokenRequest tokenRequest);
+	}
+
+	public class JwtAuthService : IJwtAuthService
 	{
 		private const string DEFAULT_CLIENT_ID = "default";
 		private readonly AuthTokenOptions _tokenOpts;

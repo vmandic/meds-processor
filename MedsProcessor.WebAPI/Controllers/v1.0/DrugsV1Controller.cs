@@ -8,9 +8,9 @@ using MedsProcessor.WebAPI.Models;
 using MedsProcessor.WebAPI.Utils;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers.v1
+namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
-	public class DrugsController : ApiV1ControllerBase
+	public class DrugsV1Controller : ApiV1ControllerBase
 	{
 		public enum DrugListTypeFilter
 		{
@@ -19,10 +19,11 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 			Supplementary = DrugListType.Supplementary
 		}
 
-		private readonly HzzoData _data;
-		public DrugsController(HzzoData data)
+		private readonly IEnumerable<HzzoMedsImportDto> _allMeds;
+
+		public DrugsV1Controller(HzzoData data)
 		{
-			this._data = data;
+			this._allMeds = data.Set.SelectMany(x => x.MedsList);
 		}
 
 		/// <summary>
@@ -33,7 +34,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="page">Page number of items being retrieved.</param>
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged or unpaged JSON list of drugs filtered by query parameters.</returns>
-		[HttpGet("list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
+		[HttpGet("drugs/list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		public ActionResult GetDumpJson(
@@ -44,8 +45,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		{
 			var result =
 				FilterByYears(years,
-					FilterByType(type,
-						_data.Set.SelectMany(x => x.MedsList)));
+					FilterByType(type, _allMeds));
 
 			return ApiResponse.TryForPagedData(result, page, size);
 		}
@@ -58,7 +58,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="page">Page number of items being retrieved.</param>
 		/// <param name="size">Number of items per page to retrieve.</param>
 		/// <returns>Returns a paged or unpaged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
-		[HttpGet("search/{searchQuery:length(1,50)}")]
+		[HttpGet("drugs/search/{searchQuery:length(1,50)}")]
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		public ActionResult GetSearchForDrug(
@@ -72,17 +72,15 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 			bool ContainsSearchForAnyOf(params string[] args) =>
 				args.AsEnumerable().Any(ContainsSearchForProp);
 
-			var result = _data.Set
-				.SelectMany(x => x.MedsList)
-				.Where(x =>
-					ContainsSearchForAnyOf(
-						x.GenericName,
-						x.RegisteredName,
-						x.Manufacturer,
-						x.ApprovedBy,
-						x.DrugGroup,
-						x.DrugSubgroup,
-						x.OriginalPackagingDescription));
+			var result = _allMeds.Where(x =>
+				ContainsSearchForAnyOf(
+					x.GenericName,
+					x.RegisteredName,
+					x.Manufacturer,
+					x.ApprovedBy,
+					x.DrugGroup,
+					x.DrugSubgroup,
+					x.OriginalPackagingDescription));
 
 			return ApiResponse.TryForPagedData(result, page, size);
 		}
@@ -92,20 +90,18 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// </summary>
 		/// <param name="atkCode">The unique ATK code of a drug or medicine usually in lenght of 10 to 12 charaters including a blank space on the third from the end index of the string. Minimum length of the parameter is 4 and maximum 12 characters.</param>
 		/// <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>
-		[HttpGet("search/atk/{atkCode:length(4,12)}")]
+		[HttpGet("drugs/for/atk/{atkCode:length(4,12)}")]
 		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByAtkCode(
 			string atkCode)
 		{
+			// Ensure that the atk code string ends with a whitespace followed by three characters
 			if (atkCode.Reverse().ToArray() [3] != ' ')
 			{
 				atkCode = atkCode.Insert(atkCode.Length - 3, " ");
 			}
 
-			atkCode = atkCode.ToUpper();
-
-			var result = _data.Set
-				.SelectMany(x => x.MedsList)
-				.Where(x => x.AtkCode.ToUpper() == atkCode)
+			var result = _allMeds
+				.Where(x => x.AtkCode.Equals(atkCode, StringComparison.OrdinalIgnoreCase))
 				.OrderBy(x => x.ValidFrom);
 
 			return ApiResponse.ForData(
@@ -114,19 +110,24 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		}
 
 		/// <summary>
-		/// Searches for all drugs produced by a manufacturer. The lookup works by checking if the manufacturer name contains the provided manufacturer parameter.
+		/// Searches for all drugs produced by a manufacturer.
+		/// The lookup works by checking if the manufacturer name contains the provided manufacturer parameter.
 		/// </summary>
-		/// <param name="manufacturer">The drug manufacturer. Can ba a part of the full name of a manufacturer.</param>
-		/// <returns>Returns a JSON list containing the found drugs mateched by the provided manufacturer query parameter.</returns>
-		[HttpGet("search/manufacturer/{manufacturer:length(1,50)}")]
+		/// <param name="manufacturer">
+		/// The drug manufacturer.
+		/// Can ba a part of the full name of a manufacturer.
+		/// </param>
+		/// <returns>
+		/// Returns a JSON list containing the found drugs mateched by the provided manufacturer query parameter.
+		/// </returns>
+		[HttpGet("drugs/by-matching/manufacturer/{manufacturer:length(1,50)}")]
 		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByManufacturer(
 			string manufacturer)
 		{
-			manufacturer = manufacturer.ToUpper().Trim();
+			manufacturer = manufacturer.Trim();
 
-			var result = _data.Set
-				.SelectMany(x => x.MedsList)
-				.Where(x => x.Manufacturer.ToUpper().Contains(manufacturer))
+			var result = _allMeds
+				.Where(x => x.Manufacturer.Contains(manufacturer, StringComparison.OrdinalIgnoreCase))
 				.OrderBy(x => x.ValidFrom);
 
 			return ApiResponse.ForData(
@@ -141,8 +142,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 			if (!string.IsNullOrEmpty(years))
 			{
 				var filter = years
-					.Split(",")
-					.Where(x => !string.IsNullOrEmpty(x))
+					.Split(",", StringSplitOptions.RemoveEmptyEntries)
 					.Select(int.Parse)
 					.ToList();
 
