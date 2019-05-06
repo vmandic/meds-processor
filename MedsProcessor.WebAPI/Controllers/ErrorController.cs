@@ -5,7 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
 {
-	[ApiController, ApiVersionNeutral, Route("[controller]")]
+	[ApiController, ApiVersionNeutral, Route("api/[controller]")]
 	public class ErrorController : ControllerBase
 	{
 		/// <summary>

@@ -32,7 +32,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="years">A year or years comma delimited list to lookup the desired drugs.</param>
 		/// <param name="page">Page number of items being retrieved.</param>
 		/// <param name="size">Number of items per page to retrieve.</param>
-		/// <returns>Returns a paged JSON list of drugs filtered by query parameters.</returns>
+		/// <returns>Returns a paged or unpaged JSON list of drugs filtered by query parameters.</returns>
 		[HttpGet("list/{type}/{years:regex(^(\\d{{1,}},?)*$)?}")]
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
@@ -57,7 +57,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		/// <param name="searchQuery">The drug search query of length from 1 to 50 character to lookup the whole list of drugs.</param>
 		/// <param name="page">Page number of items being retrieved.</param>
 		/// <param name="size">Number of items per page to retrieve.</param>
-		/// <returns>Returns a paged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
+		/// <returns>Returns a paged or unpaged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
 		[HttpGet("search/{searchQuery:length(1,50)}")]
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
@@ -88,7 +88,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1
 		}
 
 		/// <summary>
-		/// Searches for all drugs matching the drug ATK code parameter.
+		/// Searches for all drugs eaxctly matching the drug ATK code parameter.
 		/// </summary>
 		/// <param name="atkCode">The unique ATK code of a drug or medicine usually in lenght of 10 to 12 charaters including a blank space on the third from the end index of the string. Minimum length of the parameter is 4 and maximum 12 characters.</param>
 		/// <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>

@@ -10,7 +10,7 @@ namespace MedsProcessor.WebAPI
 	{
 		public static async Task Main(string[] args)
 		{
-			IWebHost host = CreateWebHostBuilder(args).Build();
+			var host = CreateWebHostBuilder(args).Build();
 			var processor = host.Services.GetService<HzzoDataProcessor>();
 
 			#pragma warning disable
@@ -21,8 +21,7 @@ namespace MedsProcessor.WebAPI
 			await host.RunAsync();
 		}
 
-		public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-			WebHost.CreateDefaultBuilder(args)
-			.UseStartup<Startup>();
+		private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+			WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
 	}
 }
