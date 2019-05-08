@@ -1,14 +1,13 @@
+using MedsProcessor.WebAPI.Infrastructure;
 using MedsProcessor.WebAPI.Models;
-using MedsProcessor.WebAPI.Utils;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
 {
-	[ApiController, ApiVersionNeutral, Route("api/[controller]")]
-	[ProducesResponseType(200), ProducesResponseType(400), ProducesResponseType(500)]
-	public class AuthController : ControllerBase
+	[ApiVersionNeutral, Route("api/[controller]")]
+	public class AuthController : ApiControllerBase
 	{
 		private readonly IJwtAuthService jwtService;
 		public AuthController(IJwtAuthService jwtService)
@@ -17,14 +16,18 @@ namespace MedsProcessor.WebAPI.Controllers
 		}
 
 		[AllowAnonymous, HttpPost("token")]
-		[Consumes("application/json"), ProducesResponseType(StatusCodes.Status401Unauthorized)]
-		public ActionResult RequestToken([FromBody] AuthTokenRequest request)
+		public ActionResult<AuthTokenResponse> RequestToken([FromBody] AuthTokenRequest request)
 		{
 			var(authenticatedSuccessfully, token) = jwtService.IssueToken(request);
 
 			return authenticatedSuccessfully
-				? (ActionResult) Ok(token)
-				: Unauthorized();
+				? ApiResponse.ForData(
+						new AuthTokenResponse(token),
+						message: "Access token issued successfully.")
+				: ApiResponse.ForData(
+						new AuthTokenResponse(),
+						StatusCodes.Status401Unauthorized,
+						message: "An invalid or unauthorized Client ID was provided.");
 		}
 	}
 }

@@ -4,7 +4,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
 
-namespace MedsProcessor.WebAPI.Utils
+namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public class BasicAuthMiddleware
 	{

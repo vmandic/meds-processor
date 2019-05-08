@@ -4,7 +4,7 @@ using MedsProcessor.Common;
 using MedsProcessor.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Utils
+namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public static class ApiResponse
 	{

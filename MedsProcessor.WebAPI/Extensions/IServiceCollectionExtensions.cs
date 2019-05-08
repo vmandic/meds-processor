@@ -9,7 +9,7 @@ using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Core;
-using MedsProcessor.WebAPI.Utils;
+using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
@@ -25,25 +25,29 @@ namespace MedsProcessor.WebAPI.Extensions
 {
 	public static class IServiceCollectionExtensions
 	{
-		public static IServiceCollection ConfigureIpRequestThrottling(
+		/// <summary>
+		/// Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
+		/// </summary>
+		/// <remarks>ref: https://github.com/stefanprodan/AspNetCoreRateLimit/wiki</remarks>
+		public static IServiceCollection ConfigureHttpRequestThrottling(
 			this IServiceCollection services,
 			IConfiguration config)
 		{
 			services.AddHttpContextAccessor();
-
-			//load general configuration from appsettings.json
-			services.Configure<IpRateLimitOptions>(config.GetSection("IpRateLimiting"));
+			services.Configure<IpRateLimitOptions>(config.GetSection("HttpRequestRateLimit"));
 
 			// inject counter and rules stores
 			services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 			services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
 
-			// configuration (resolvers, counter key builders)
-			//services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
-
 			return services;
 		}
 
+		/// <summary>
+		/// Adds Open API (Swagger) services for documenting the Web API with v1 version.
+		/// Adds msbuild documentation into the swagger to provide additional information about the available endpoints.
+		/// Adds a 'security definition' for swagger allowing the SwaggerUI library to display an Authorize button for enabling JWT authentication.
+		/// </summary>
 		public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
 		{
 			services.AddSwaggerGen(opts =>
@@ -53,7 +57,7 @@ namespace MedsProcessor.WebAPI.Extensions
 					new Info
 					{
 						Title = "HZZO meds-processor v1.0",
-							Version = "1.0"
+						Version = "1.0"
 					});
 
 				// Setup swagger to use msbuild documentation:
@@ -65,9 +69,9 @@ namespace MedsProcessor.WebAPI.Extensions
 				opts.AddSecurityDefinition("Bearer", new ApiKeyScheme
 				{
 					In = "header",
-						Description = "Please insert JWT with Bearer into field",
-						Name = "Authorization",
-						Type = "apiKey"
+					Description = "Please insert JWT with Bearer into field",
+					Name = "Authorization",
+					Type = "apiKey"
 				});
 
 				opts.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
@@ -78,6 +82,11 @@ namespace MedsProcessor.WebAPI.Extensions
 			return services;
 		}
 
+		/// <summary>
+		/// Configures MVC services by enforcing a strict check for HTTP request's 'Accept' (a.k.a. strict content negotiation) header.
+		/// Configures the HTTP pipeline to return a status code 406 when an invalid formatter is specified through a HTTP header.
+		/// Configures the default 'Newtonsoft.Json' serializer to use <see cref="SnakeCaseNamingStrategy"/> for serializing and parsing JSON properties and changes the default and null value handling to be ignored. The default date value is formated as 'yyyy-MM-dd'.
+ 		/// </summary>
 		public static IServiceCollection ConfigureMvc(this IServiceCollection services)
 		{
 			services.AddMvc(opts =>
@@ -114,13 +123,17 @@ namespace MedsProcessor.WebAPI.Extensions
 			services.AddSingleton<HzzoDataProcessor>();
 			services.AddSingleton<HzzoData>();
 
-			services.AddScoped<IJwtAuthService, JwtAuthService>();
-
 			return services;
 		}
 
+		/// <summary>
+		/// Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
+		/// Configures the JWT options by reading configuration options for <see cref="AuthTokenOptions" />.
+		/// </summary>
 		public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration config)
 		{
+			services.AddScoped<IJwtAuthService, JwtAuthService>();
+
 			var tokenOptsConfig = config.GetSection(nameof(AuthTokenOptions).Replace("Options", ""));
 			var tokenOpts = tokenOptsConfig.Get<AuthTokenOptions>();
 			services.Configure<AuthTokenOptions>(tokenOptsConfig);
@@ -137,17 +150,14 @@ namespace MedsProcessor.WebAPI.Extensions
 				opts.TokenValidationParameters = new TokenValidationParameters
 				{
 					RequireSignedTokens = true,
-						RequireExpirationTime = true,
-
-						IssuerSigningKey = tokenOpts.Key,
-						ValidIssuer = tokenOpts.Issuer,
-						ValidAudience = tokenOpts.Audience,
-
-						ValidateIssuer = true,
-						ValidateAudience = false,
-
-						ValidateLifetime = true,
-						ValidateIssuerSigningKey = true,
+					RequireExpirationTime = true,
+					IssuerSigningKey = tokenOpts.Key,
+					ValidIssuer = tokenOpts.Issuer,
+					ValidAudience = tokenOpts.Audience,
+					ValidateIssuer = true,
+					ValidateAudience = false,
+					ValidateLifetime = true,
+					ValidateIssuerSigningKey = true
 				};
 
 				opts.Events = new JwtBearerEvents

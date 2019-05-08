@@ -1,12 +1,12 @@
 using MedsProcessor.WebAPI.Models;
-using MedsProcessor.WebAPI.Utils;
+using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers
 {
-	[ApiController, ApiVersionNeutral, Route("api/[controller]")]
-	public class ErrorController : ControllerBase
+	[ApiVersionNeutral, Route("api/[controller]")]
+	public class ErrorController : ApiControllerBase
 	{
 		/// <summary>
 		/// Catches and handles global exceptions by intercepting HTTP errors specified through the URL.

@@ -5,20 +5,13 @@ using MedsProcessor.Common;
 using MedsProcessor.Common.Models;
 using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
-using MedsProcessor.WebAPI.Utils;
+using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
 	public class DrugsV1Controller : ApiV1ControllerBase
 	{
-		public enum DrugListTypeFilter
-		{
-			All = DrugListType.Undefined,
-			Primary = DrugListType.Primary,
-			Supplementary = DrugListType.Supplementary
-		}
-
 		private readonly IEnumerable<HzzoMedsImportDto> _allMeds;
 
 		public DrugsV1Controller(HzzoData data)

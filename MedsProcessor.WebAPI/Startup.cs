@@ -33,7 +33,7 @@ namespace MedsProcessor.WebAPI
 				opts.AssumeDefaultVersionWhenUnspecified = true;
 				opts.ReportApiVersions = true;
 			});
-			services.ConfigureIpRequestThrottling(Configuration);
+			services.ConfigureHttpRequestThrottling(Configuration);
 			services.ConfigureDependencies();
 			services.ConfigureAuthentication(Configuration);
 			services.ConfigureMvc();

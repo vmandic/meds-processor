@@ -1,12 +1,14 @@
 using System;
-using MedsProcessor.WebAPI.Utils;
+using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Builder;
 
 namespace MedsProcessor.WebAPI.Extensions
 {
 	public static class IApplicationBuilderExtensions
 	{
-		public static IApplicationBuilder UseBasicAuthentication(this IApplicationBuilder app, Action<BasicAuthOptions> configureBasicAuthOpts)
+		public static IApplicationBuilder UseBasicAuthentication(
+			this IApplicationBuilder app,
+			Action<BasicAuthOptions> configureBasicAuthOpts)
 		{
 			var opts = new BasicAuthOptions();
 			configureBasicAuthOpts(opts);

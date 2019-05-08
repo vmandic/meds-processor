@@ -44,7 +44,8 @@ namespace MedsProcessor.WebAPI.Core
 
 		public async Task<string> Run(bool force = false)
 		{
-			// utilize if-lock-if pattern
+			// utilize if-async-lock-if pattern
+			// ref: https://en.wikipedia.org/wiki/Double-checked_locking
 			if (force || !_data.IsLoaded())
 			{
 				try

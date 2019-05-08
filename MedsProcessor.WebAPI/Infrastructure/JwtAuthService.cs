@@ -6,7 +6,7 @@ using MedsProcessor.WebAPI.Models;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MedsProcessor.WebAPI.Utils
+namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public interface IJwtAuthService
 	{

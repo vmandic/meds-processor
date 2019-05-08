@@ -4,7 +4,7 @@ using System.Linq;
 using System.Net;
 using Microsoft.AspNetCore.Http;
 
-namespace MedsProcessor.WebAPI.Utils
+namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public class BasicAuthOptions
 	{

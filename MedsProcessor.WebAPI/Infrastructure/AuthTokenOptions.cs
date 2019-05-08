@@ -2,7 +2,7 @@ using System;
 using System.Text;
 using Microsoft.IdentityModel.Tokens;
 
-namespace MedsProcessor.WebAPI.Utils
+namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public class AuthTokenOptions
 	{

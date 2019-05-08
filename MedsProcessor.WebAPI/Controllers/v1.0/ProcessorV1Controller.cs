@@ -6,7 +6,7 @@ using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
-using MedsProcessor.WebAPI.Utils;
+using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers.v1_0

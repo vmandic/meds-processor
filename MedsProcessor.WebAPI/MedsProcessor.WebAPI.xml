@@ -16,7 +16,7 @@
             </summary>
             <returns>Returns a JSON formatted message with basic Web API info.</returns>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetDumpJson(MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.DrugListTypeFilter,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetDumpJson(MedsProcessor.Common.DrugListTypeFilter,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
             <summary>
             Gets a list of drugs by specifying the type and year(s).
             </summary>
@@ -82,6 +82,32 @@
             The internal method is called by a force=true call to the action method: <see cref="M:MedsProcessor.WebAPI.Controllers.v1_0.ProcessorV1Controller.GetRun(System.Boolean)"/>.
             </summary>
             <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureHttpRequestThrottling(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
+            </summary>
+            <remarks>ref: https://github.com/stefanprodan/AspNetCoreRateLimit/wiki</remarks>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds Open API (Swagger) services for documenting the Web API with v1 version.
+            Adds msbuild documentation into the swagger to provide additional information about the available endpoints.
+            Adds a 'security definition' for swagger allowing the SwaggerUI library to display an Authorize button for enabling JWT authentication.
+            </summary>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures MVC services by enforcing a strict check for HTTP request's 'Accept' (a.k.a. strict content negotiation) header.
+            Configures the HTTP pipeline to return a status code 406 when an invalid formatter is specified through a HTTP header.
+            Configures the default 'Newtonsoft.Json' serializer to use <see cref="T:Newtonsoft.Json.Serialization.SnakeCaseNamingStrategy"/> for serializing and parsing JSON properties and changes the default and null value handling to be ignored. The default date value is formated as 'yyyy-MM-dd'.
+            </summary>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
+            Configures the JWT options by reading configuration options for <see cref="T:MedsProcessor.WebAPI.Infrastructure.AuthTokenOptions" />.
+            </summary>
         </member>
     </members>
 </doc>
