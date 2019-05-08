@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 using System.Threading.Tasks;
+using AspNetCoreRateLimit;
 using MedsProcessor.Common.Models;
 using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
@@ -24,6 +25,25 @@ namespace MedsProcessor.WebAPI.Extensions
 {
 	public static class IServiceCollectionExtensions
 	{
+		public static IServiceCollection ConfigureIpRequestThrottling(
+			this IServiceCollection services,
+			IConfiguration config)
+		{
+			services.AddHttpContextAccessor();
+
+			//load general configuration from appsettings.json
+			services.Configure<IpRateLimitOptions>(config.GetSection("IpRateLimiting"));
+
+			// inject counter and rules stores
+			services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
+			services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+
+			// configuration (resolvers, counter key builders)
+			//services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
+
+			return services;
+		}
+
 		public static IServiceCollection ConfigureSwagger(this IServiceCollection services)
 		{
 			services.AddSwaggerGen(opts =>

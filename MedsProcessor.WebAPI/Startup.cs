@@ -1,3 +1,4 @@
+using AspNetCoreRateLimit;
 using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Extensions;
 using Microsoft.AspNetCore.Builder;
@@ -21,6 +22,8 @@ namespace MedsProcessor.WebAPI
 		// This method gets called by the runtime. Use this method to add services to the container.
 		public void ConfigureServices(IServiceCollection services)
 		{
+			services.AddOptions();
+			services.AddMemoryCache();
 			services.AddHttpClient();
 			services.AddAngleSharp();
 			services.AddResponseCompression();
@@ -30,6 +33,7 @@ namespace MedsProcessor.WebAPI
 				opts.AssumeDefaultVersionWhenUnspecified = true;
 				opts.ReportApiVersions = true;
 			});
+			services.ConfigureIpRequestThrottling(Configuration);
 			services.ConfigureDependencies();
 			services.ConfigureAuthentication(Configuration);
 			services.ConfigureMvc();
@@ -45,6 +49,8 @@ namespace MedsProcessor.WebAPI
 			// Expose the API for outer domain requests
 			app.UseCors(opts =>
 				opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+			app.UseIpRateLimiting();
 
 			// Handles exceptions and generates a custom response body
 			app.UseExceptionHandler("/api/error");
