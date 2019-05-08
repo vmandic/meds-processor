@@ -14,7 +14,8 @@ namespace MedsProcessor.Common
 		NotRan,
 		Ran,
 		DataCleared,
-		Running
+		Running,
+		CrashedWhileRunning
 	}
 
 	public enum DrugListType

@@ -69,11 +69,15 @@ namespace MedsProcessor.WebAPI.Core
 						_data.Load(parsedMeds);
 						_state = ProcessorState.Ran;
 						_timesRan++;
-						_lastRunDuration = DateTime.Now - startTime;
+						_lastRunDuration = (DateTime.Now - startTime).Duration();
 						_lastRunFinishedOn = DateTime.Now;
 
 						return $"Processed! Handler duration: {_lastRunDuration}{GetParseDetails()}";
 					}
+				}
+				catch
+				{
+					_state = ProcessorState.CrashedWhileRunning;
 				}
 				finally
 				{

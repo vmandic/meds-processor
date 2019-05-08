@@ -18,13 +18,13 @@ namespace MedsProcessor.Downloader
 		{
 			this._httpCli = httpCliFact.CreateClient();
 			this.DownloadDirPath = Path.Combine(appPathsInfo.ApplicationRootPath, DOWNLOAD_DIR);
-
-			if (!Directory.Exists(DownloadDirPath))
-				Directory.CreateDirectory(DownloadDirPath);
 		}
 
 		public async Task<ISet<HzzoMedsDownloadDto>> Run(ISet<HzzoMedsDownloadDto> meds, bool force = false)
 		{
+			if (!Directory.Exists(DownloadDirPath))
+				Directory.CreateDirectory(DownloadDirPath);
+
 			// NOTE: throttle requests in parallel
 			var parallelismDegree = 5;
 			var waitBetweenRequestsMs = 500;

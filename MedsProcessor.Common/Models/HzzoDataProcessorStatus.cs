@@ -34,7 +34,7 @@ namespace MedsProcessor.Common.Models
 
 		public TimeSpan? LastRunStartedBefore =>
 			LastRunFinishedOn.HasValue
-				? LastRunStartedOn.Value.Subtract(DateTime.Now)
+				? DateTime.Now.Subtract(LastRunStartedOn.Value)
 				: (TimeSpan?) null;
 
 		public DateTime? LastRunFinishedOn { get; }

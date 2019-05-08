@@ -26,17 +26,13 @@ namespace MedsProcessor.WebAPI
 			services.AddMemoryCache();
 			services.AddHttpClient();
 			services.AddAngleSharp();
-			services.AddResponseCompression();
-			services.AddApiVersioning(opts =>
-			{
-				opts.DefaultApiVersion = new ApiVersion(1, 0);
-				opts.AssumeDefaultVersionWhenUnspecified = true;
-				opts.ReportApiVersions = true;
-			});
+			services.AddResponseCompression(opts => opts.EnableForHttps = true);
+
+			services.ConfigureApiVersioning();
 			services.ConfigureHttpRequestThrottling(Configuration);
-			services.ConfigureDependencies();
+			services.ConfigureCoreDependencies();
 			services.ConfigureAuthentication(Configuration);
-			services.ConfigureMvc();
+			services.ConfigureMvcAndJsonSerializer();
 			services.ConfigureSwagger();
 		}
 
@@ -46,9 +42,11 @@ namespace MedsProcessor.WebAPI
 			if (env.IsProduction())
 				app.UseHsts();
 
+			app.UseHttpsRedirection();
+
 			// Expose the API for outer domain requests
 			app.UseCors(opts =>
-				opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+				opts.AllowAnyOrigin().AllowAnyHeader().WithMethods("GET", "POST", "OPTIONS"));
 
 			app.UseIpRateLimiting();
 
@@ -66,11 +64,11 @@ namespace MedsProcessor.WebAPI
 				opts.Password = "admin";
 			});
 
-			app.UseHttpsRedirection();
 			app.UseResponseCompression();
 
 			// Enable middleware to serve generated Swagger as a JSON endpoint.
 			app.UseSwagger();
+
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
 			app.UseSwaggerUI(c =>
 				c.SwaggerEndpoint("/swagger/v1-0/swagger.json", "HZZO meds-processor v1.0"));

@@ -38,7 +38,8 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		{
 			var result =
 				FilterByYears(years,
-					FilterByType(type, _allMeds));
+					FilterByType(type, _allMeds))
+				.ToList();
 
 			return ApiResponse.TryForPagedData(result, page, size);
 		}
@@ -60,7 +61,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 			int? size = null)
 		{
 			bool ContainsSearchForProp(string str) =>
-				str.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
+				str != null && str.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
 
 			bool ContainsSearchForAnyOf(params string[] args) =>
 				args.AsEnumerable().Any(ContainsSearchForProp);
@@ -73,7 +74,8 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 					x.ApprovedBy,
 					x.DrugGroup,
 					x.DrugSubgroup,
-					x.OriginalPackagingDescription));
+					x.OriginalPackagingDescription))
+				.ToList();
 
 			return ApiResponse.TryForPagedData(result, page, size);
 		}
@@ -95,7 +97,8 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 
 			var result = _allMeds
 				.Where(x => x.AtkCode.Equals(atkCode, StringComparison.OrdinalIgnoreCase))
-				.OrderBy(x => x.ValidFrom);
+				.OrderBy(x => x.ValidFrom)
+				.ToList();
 
 			return ApiResponse.ForData(
 				result,
@@ -121,7 +124,8 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 
 			var result = _allMeds
 				.Where(x => x.Manufacturer.Contains(manufacturer, StringComparison.OrdinalIgnoreCase))
-				.OrderBy(x => x.ValidFrom);
+				.OrderBy(x => x.ValidFrom)
+				.ToList();
 
 			return ApiResponse.ForData(
 				result,

@@ -26,6 +26,18 @@ namespace MedsProcessor.WebAPI.Extensions
 	public static class IServiceCollectionExtensions
 	{
 		/// <summary>
+		/// Configures the API versioning services with the default 1.0 API version to be used when a version is not specified.
+		/// Enables reporting avialable and deprecated API versions through HTTP response headers.
+		/// </summary>
+		public static IServiceCollection ConfigureApiVersioning(this IServiceCollection services) =>
+			services.AddApiVersioning(opts =>
+			{
+				opts.DefaultApiVersion = new ApiVersion(1, 0);
+				opts.AssumeDefaultVersionWhenUnspecified = true;
+				opts.ReportApiVersions = true;
+			});
+
+		/// <summary>
 		/// Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
 		/// </summary>
 		/// <remarks>ref: https://github.com/stefanprodan/AspNetCoreRateLimit/wiki</remarks>
@@ -69,9 +81,9 @@ namespace MedsProcessor.WebAPI.Extensions
 				opts.AddSecurityDefinition("Bearer", new ApiKeyScheme
 				{
 					In = "header",
-					Description = "Please insert JWT with Bearer into field",
-					Name = "Authorization",
-					Type = "apiKey"
+						Description = "Please insert JWT with Bearer into field",
+						Name = "Authorization",
+						Type = "apiKey"
 				});
 
 				opts.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
@@ -86,8 +98,8 @@ namespace MedsProcessor.WebAPI.Extensions
 		/// Configures MVC services by enforcing a strict check for HTTP request's 'Accept' (a.k.a. strict content negotiation) header.
 		/// Configures the HTTP pipeline to return a status code 406 when an invalid formatter is specified through a HTTP header.
 		/// Configures the default 'Newtonsoft.Json' serializer to use <see cref="SnakeCaseNamingStrategy"/> for serializing and parsing JSON properties and changes the default and null value handling to be ignored. The default date value is formated as 'yyyy-MM-dd'.
- 		/// </summary>
-		public static IServiceCollection ConfigureMvc(this IServiceCollection services)
+		/// </summary>
+		public static IServiceCollection ConfigureMvcAndJsonSerializer(this IServiceCollection services)
 		{
 			services.AddMvc(opts =>
 				{
@@ -112,7 +124,7 @@ namespace MedsProcessor.WebAPI.Extensions
 			return services;
 		}
 
-		public static IServiceCollection ConfigureDependencies(this IServiceCollection services)
+		public static IServiceCollection ConfigureCoreDependencies(this IServiceCollection services)
 		{
 			services.AddSingleton(
 				s => new AppPathsInfo(s.GetService<IHostingEnvironment>().ContentRootPath));

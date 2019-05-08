@@ -83,6 +83,12 @@
             </summary>
             <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
         </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureApiVersioning(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the API versioning services with the default 1.0 API version to be used when a version is not specified.
+            Enables reporting avialable and deprecated API versions through HTTP response headers.
+            </summary>
+        </member>
         <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureHttpRequestThrottling(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
@@ -96,7 +102,7 @@
             Adds a 'security definition' for swagger allowing the SwaggerUI library to display an Authorize button for enabling JWT authentication.
             </summary>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureMvc(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureMvcAndJsonSerializer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
             <summary>
             Configures MVC services by enforcing a strict check for HTTP request's 'Accept' (a.k.a. strict content negotiation) header.
             Configures the HTTP pipeline to return a status code 406 when an invalid formatter is specified through a HTTP header.
@@ -108,6 +114,12 @@
             Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
             Configures the JWT options by reading configuration options for <see cref="T:MedsProcessor.WebAPI.Infrastructure.AuthTokenOptions" />.
             </summary>
+        </member>
+        <member name="T:MedsProcessor.WebAPI.Models.ApiHttpResponse">
+            <summary>
+            For the sake of the tutorial, this class will wrap over HTTP header data and provide the HTTP status code and its description.
+            </summary>
+            <remarks>Do not consider using this class at all in production environments. Your base class can instead be <see cref="T:MedsProcessor.WebAPI.Models.ApiMessageResponse" /> which can include an additional <c>IsError</c> boolean property indicating if the HTTP request processing errored.</remarks>
         </member>
     </members>
 </doc>

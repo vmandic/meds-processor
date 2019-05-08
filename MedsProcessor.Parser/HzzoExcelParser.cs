@@ -79,7 +79,7 @@ namespace MedsProcessor.Parser
 
 			try
 			{
-				Parallel.ForEach(filteredMeds, med =>
+				foreach (var med in filteredMeds)
 				{
 					latestMed = med;
 					using(var stream = File.Open(med.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
@@ -209,7 +209,7 @@ namespace MedsProcessor.Parser
 						++_parsedCount,
 						_medsCount,
 						med.FileName);
-				});
+				};
 			}
 			catch (Exception ex)
 			{
