@@ -13,7 +13,7 @@ namespace MedsProcessor.WebAPI.Utils
 		public string Password { get; set; }
 		public bool AuthorizeLocalRequest { get; set; } = false;
 		public bool ShouldAuthorizeLocalRequests(HttpContext context) =>
-			!AuthorizeLocalRequest && !IsLocalRequest(context);
+			AuthorizeLocalRequest || !IsLocalRequest(context);
 
 		public void AuthorizeRoutes(params string[] routes) =>
 			AuthorizedRoutes = routes.AsEnumerable();

@@ -47,10 +47,7 @@ namespace MedsProcessor.WebAPI
 				opts.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
 			// Handles exceptions and generates a custom response body
-			app.UseExceptionHandler("/api/error/500");
-
-			// Handles non-success status codes with empty body
-			app.UseStatusCodePagesWithReExecute("/api/error/{0}");
+			app.UseExceptionHandler("/api/error");
 
 			app.UseAuthentication();
 
