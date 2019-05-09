@@ -8,14 +8,14 @@ The cross-platform production ready SDK is [.NET Core](https://dotnet.microsoft.
 
 ## Build, run & use 🏃
 
-**Build** the application (and ensure internet connectivty for NuGet packages to restore) with:
+**Build** the application (and ensure internet conectivity for NuGet packages to restore) with:
 
 ```bash
 > cd src/MedsProcessor.WebAPI
 MedsProcessor.WebAPI> dotnet build
 ```
 
-**Run** the application (and ensure internet conectivty for web scraper to work) on https://localhost:5001 with:
+**Run** the application (and ensure internet conectivity for web scraper to work) on https://localhost:5001 with:
 
 ```bash
 > cd src/MedsProcessor.WebAPI
