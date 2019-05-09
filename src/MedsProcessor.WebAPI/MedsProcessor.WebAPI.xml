@@ -1,0 +1,125 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>MedsProcessor.WebAPI</name>
+    </assembly>
+    <members>
+        <member name="M:MedsProcessor.WebAPI.Controllers.ErrorController.GetError">
+            <summary>
+            Catches and handles global exceptions by intercepting HTTP errors specified through the URL.
+            </summary>
+            <returns>Returns a JSON formatted message which will contain exception details if the framework can resolve the latest error.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.HomeController.Index">
+            <summary>
+            Displays initial information about the Web API.
+            </summary>
+            <returns>Returns a JSON formatted message with basic Web API info.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetDumpJson(MedsProcessor.Common.DrugListTypeFilter,System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Gets a list of drugs by specifying the type and year(s).
+            </summary>
+            <param name="type">Drug list type: All, Primary or Supplemnetary</param>
+            <param name="years">A year or years comma delimited list to lookup the desired drugs.</param>
+            <param name="page">Page number of items being retrieved.</param>
+            <param name="size">Number of items per page to retrieve.</param>
+            <returns>Returns a paged or unpaged JSON list of drugs filtered by query parameters.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetSearchForDrug(System.String,System.Nullable{System.Int32},System.Nullable{System.Int32})">
+            <summary>
+            Searches for all drugs containing the search query parameter in any of the following parameters:
+            GenericName, RegisteredName, Manufacturer, ApprovedBy, DrugGroup, DrugSubgroup and OriginalPackagingDescription.
+            </summary>
+            <param name="searchQuery">The drug search query of length from 1 to 50 character to lookup the whole list of drugs.</param>
+            <param name="page">Page number of items being retrieved.</param>
+            <param name="size">Number of items per page to retrieve.</param>
+            <returns>Returns a paged or unpaged JSON list containing the found drugs mateched by the provided search query parameter.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetListByAtkCode(System.String)">
+            <summary>
+            Searches for all drugs eaxctly matching the drug ATK code parameter.
+            </summary>
+            <param name="atkCode">The unique ATK code of a drug or medicine usually in lenght of 10 to 12 charaters including a blank space on the third from the end index of the string. Minimum length of the parameter is 4 and maximum 12 characters.</param>
+            <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.DrugsV1Controller.GetListByManufacturer(System.String)">
+            <summary>
+            Searches for all drugs produced by a manufacturer.
+            The lookup works by checking if the manufacturer name contains the provided manufacturer parameter.
+            </summary>
+            <param name="manufacturer">
+            The drug manufacturer.
+            Can ba a part of the full name of a manufacturer.
+            </param>
+            <returns>
+            Returns a JSON list containing the found drugs mateched by the provided manufacturer query parameter.
+            </returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.ProcessorV1Controller.GetRun(System.Boolean)">
+            <summary>
+            Starts the meds processor to scrape, download and parse remote .xls(x) documents from the specified Croatia's HZZO web domains.
+            <para/>
+            The processor can be re-executed by specifying the <paramref name="force"/> with a <c>True</c> value.
+            <para/>
+            Only a single (synchronized) execution of the processor is possible at one time, all other attempts will be enqueued. The following attempts will not invoke the processor but return the in-memory cached result.
+            </summary>
+            <param name="force">Specify if a processor re-execution will be enforeced.</param>
+            <returns>Returns a JSON formatted message with the information about the processor run including info about processed documents and time of processing.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.ProcessorV1Controller.GetStatus">
+            <summary>
+            Gets information about the current state of the processor such as execution times and if the processor has successfully ran to completion.
+            </summary>
+            <returns>Returns a JSON formatted message informing about the status of the processor.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Controllers.v1_0.ProcessorV1Controller.GetClearData">
+            <summary>
+            Trys deleting the downloaded .xls(x) documents from the disk and clearing the in-memory dataset of loaded meds.
+            <para/>
+            The action can not be performed if processor is currently executing.
+            <para/>
+            The internal method is called by a force=true call to the action method: <see cref="M:MedsProcessor.WebAPI.Controllers.v1_0.ProcessorV1Controller.GetRun(System.Boolean)"/>.
+            </summary>
+            <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureApiVersioning(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures the API versioning services with the default 1.0 API version to be used when a version is not specified.
+            Enables reporting avialable and deprecated API versions through HTTP response headers.
+            </summary>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureHttpRequestThrottlingByIp(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
+            </summary>
+            <remarks>ref: https://github.com/stefanprodan/AspNetCoreRateLimit/wiki</remarks>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureSwagger(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Adds Open API (Swagger) services for documenting the Web API with v1 version.
+            Adds msbuild documentation into the swagger to provide additional information about the available endpoints.
+            Adds a 'security definition' for swagger allowing the SwaggerUI library to display an Authorize button for enabling JWT authentication.
+            </summary>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureMvcAndJsonSerializer(Microsoft.Extensions.DependencyInjection.IServiceCollection)">
+            <summary>
+            Configures MVC services by enforcing a strict check for HTTP request's 'Accept' (a.k.a. strict content negotiation) header.
+            Configures the HTTP pipeline to return a status code 406 when an invalid formatter is specified through a HTTP header.
+            Configures the default 'Newtonsoft.Json' serializer to use <see cref="T:Newtonsoft.Json.Serialization.SnakeCaseNamingStrategy"/> for serializing and parsing JSON properties and changes the default and null value handling to be ignored. The default date value is formated as 'yyyy-MM-dd'.
+            </summary>
+        </member>
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+            <summary>
+            Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
+            Configures the JWT options by reading configuration options for <see cref="T:MedsProcessor.WebAPI.Infrastructure.AuthTokenOptions" />.
+            </summary>
+        </member>
+        <member name="T:MedsProcessor.WebAPI.Models.ApiHttpResponse">
+            <summary>
+            For the sake of the tutorial, this class will wrap over HTTP header data and provide the HTTP status code and its description.
+            </summary>
+            <remarks>Do not consider using this class at all in production environments. Your base class can instead be <see cref="T:MedsProcessor.WebAPI.Models.ApiMessageResponse" /> which can include an additional <c>IsError</c> boolean property indicating if the HTTP request processing errored.</remarks>
+        </member>
+    </members>
+</doc>
