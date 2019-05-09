@@ -41,7 +41,7 @@ namespace MedsProcessor.WebAPI.Extensions
 		/// Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
 		/// </summary>
 		/// <remarks>ref: https://github.com/stefanprodan/AspNetCoreRateLimit/wiki</remarks>
-		public static IServiceCollection ConfigureHttpRequestThrottling(
+		public static IServiceCollection ConfigureHttpRequestThrottlingByIp(
 			this IServiceCollection services,
 			IConfiguration config)
 		{
@@ -142,7 +142,7 @@ namespace MedsProcessor.WebAPI.Extensions
 		/// Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
 		/// Configures the JWT options by reading configuration options for <see cref="AuthTokenOptions" />.
 		/// </summary>
-		public static IServiceCollection ConfigureAuthentication(this IServiceCollection services, IConfiguration config)
+		public static IServiceCollection ConfigureJwtAuthentication(this IServiceCollection services, IConfiguration config)
 		{
 			services.AddScoped<IJwtAuthService, JwtAuthService>();
 

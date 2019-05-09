@@ -89,7 +89,7 @@
             Enables reporting avialable and deprecated API versions through HTTP response headers.
             </summary>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureHttpRequestThrottling(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureHttpRequestThrottlingByIp(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Adds HTTP web request throttling services (a.k.a. rate limiting) via 'AspNetCoreRateLimit' library based on IP limiting.
             </summary>
@@ -109,7 +109,7 @@
             Configures the default 'Newtonsoft.Json' serializer to use <see cref="T:Newtonsoft.Json.Serialization.SnakeCaseNamingStrategy"/> for serializing and parsing JSON properties and changes the default and null value handling to be ignored. The default date value is formated as 'yyyy-MM-dd'.
             </summary>
         </member>
-        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
+        <member name="M:MedsProcessor.WebAPI.Extensions.IServiceCollectionExtensions.ConfigureJwtAuthentication(Microsoft.Extensions.DependencyInjection.IServiceCollection,Microsoft.Extensions.Configuration.IConfiguration)">
             <summary>
             Configures the HTTP pipeline to use JWT authentication as the default auth scheme.
             Configures the JWT options by reading configuration options for <see cref="T:MedsProcessor.WebAPI.Infrastructure.AuthTokenOptions" />.

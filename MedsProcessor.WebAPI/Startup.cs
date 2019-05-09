@@ -29,9 +29,9 @@ namespace MedsProcessor.WebAPI
 			services.AddResponseCompression(opts => opts.EnableForHttps = true);
 
 			services.ConfigureApiVersioning();
-			services.ConfigureHttpRequestThrottling(Configuration);
+			services.ConfigureHttpRequestThrottlingByIp(Configuration);
 			services.ConfigureCoreDependencies();
-			services.ConfigureAuthentication(Configuration);
+			services.ConfigureJwtAuthentication(Configuration);
 			services.ConfigureMvcAndJsonSerializer();
 			services.ConfigureSwagger();
 		}
