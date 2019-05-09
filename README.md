@@ -6,7 +6,7 @@
 
 The cross-platform production ready SDK is [.NET Core](https://dotnet.microsoft.com/download) and the version used to build this application is `"version": "2.1.403"`. You can find the SDK downloads for your OS [here](https://dotnet.microsoft.com/download/dotnet-core/2.1#sdk-2.1.403).
 
-## Build & run 🏃
+## Build, run & use 🏃
 
 **Build** the application (and ensure internet connectivty for NuGet packages to restore) with:
 
@@ -21,6 +21,14 @@ MedsProcessor.WebAPI> dotnet build
 > cd src/MedsProcessor.WebAPI
 MedsProcessor.WebAPI> dotnet run
 ```
+
+You can now **browse the Web API via a Swagger UI** on the address: https://localhost:5001/swagger/index.html
+
+## A drugs Web API (you'll build) 🤖
+
+The image below is a screenshot of the Swagger UI which is produced to document the Web API with available endpoints and their respected HTTP methods.
+
+![meds-processor-api swagger image](https://i.ibb.co/tXV63wf/meds-processor-api.png)
 
 ## Why (I built this) 🙈
 
