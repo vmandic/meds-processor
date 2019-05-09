@@ -7,7 +7,7 @@
             "type": "process",
             "args": [
                 "build",
-                "${workspaceFolder}/MedsProcessor.WebAPI/MedsProcessor.WebAPI.csproj"
+                "${workspaceFolder}/src/MedsProcessor.WebAPI/MedsProcessor.WebAPI.csproj"
             ],
             "problemMatcher": "$msCompile"
         }

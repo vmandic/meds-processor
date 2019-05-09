@@ -10,9 +10,9 @@
             "request": "launch",
             "preLaunchTask": "build",
             // If you have changed target frameworks, make sure to update the program path.
-            "program": "${workspaceFolder}/MedsProcessor.WebAPI/bin/Debug/netcoreapp2.1/MedsProcessor.WebAPI.dll",
+            "program": "${workspaceFolder}/src/MedsProcessor.WebAPI/bin/Debug/netcoreapp2.1/MedsProcessor.WebAPI.dll",
             "args": [],
-            "cwd": "${workspaceFolder}/MedsProcessor.WebAPI",
+            "cwd": "${workspaceFolder}/src/MedsProcessor.WebAPI",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart",
             "launchBrowser": {
