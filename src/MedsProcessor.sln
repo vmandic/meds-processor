@@ -3,15 +3,15 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26124.0
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Scraper", "src\MedsProcessor.Scraper\MedsProcessor.Scraper.csproj", "{7A981105-C433-4238-A887-B9A7B80D6713}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Scraper", "MedsProcessor.Scraper\MedsProcessor.Scraper.csproj", "{7A981105-C433-4238-A887-B9A7B80D6713}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Parser", "src\MedsProcessor.Parser\MedsProcessor.Parser.csproj", "{AA50F3C1-74EC-4100-B1DA-F4F72D4A4790}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Parser", "MedsProcessor.Parser\MedsProcessor.Parser.csproj", "{AA50F3C1-74EC-4100-B1DA-F4F72D4A4790}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Common", "src\MedsProcessor.Common\MedsProcessor.Common.csproj", "{CD8566B9-F04F-48C0-A734-D008C0E63633}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Common", "MedsProcessor.Common\MedsProcessor.Common.csproj", "{CD8566B9-F04F-48C0-A734-D008C0E63633}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.WebAPI", "src\MedsProcessor.WebAPI\MedsProcessor.WebAPI.csproj", "{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.WebAPI", "MedsProcessor.WebAPI\MedsProcessor.WebAPI.csproj", "{11F9D724-9D26-4D9E-8B07-FB4B6748BA61}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Downloader", "src\MedsProcessor.Downloader\MedsProcessor.Downloader.csproj", "{02947F5D-30ED-4C05-9B5C-84759274904C}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MedsProcessor.Downloader", "MedsProcessor.Downloader\MedsProcessor.Downloader.csproj", "{02947F5D-30ED-4C05-9B5C-84759274904C}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{ED8E58B5-5614-4A58-BF4B-AC452281CCD7}"
 	ProjectSection(SolutionItems) = preProject
