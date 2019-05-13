@@ -1,11 +1,9 @@
 using System;
 using System.ComponentModel;
-using MedsProcessor.Common;
-using Newtonsoft.Json;
 
 namespace MedsProcessor.Common.Models
 {
-	public class HzzoMedsImportDto
+    public class HzzoMedsImportDto
 	{
 		public int RowId { get; set; }
 		public DrugListType ListType { get; set; }
