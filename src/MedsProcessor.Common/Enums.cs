@@ -2,6 +2,13 @@ using System;
 
 namespace MedsProcessor.Common
 {
+  public enum DrugListTypeFilter
+  {
+    Primary = DrugListType.Primary,
+    Supplementary = DrugListType.Supplementary,
+    All = DrugListType.Undefined
+  }
+
   public enum ProcessorState
 	{
 		NotRan,
