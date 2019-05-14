@@ -1,22 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk.Web">
 
-	<PropertyGroup>
-		<TargetFramework>netcoreapp2.1</TargetFramework>
-	</PropertyGroup>
+  <PropertyGroup>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
 
-	<ItemGroup>
-		<Folder Include="wwwroot\" />
-	</ItemGroup>
+  <ItemGroup>
+    <Folder Include="wwwroot\" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<PackageReference Include="Microsoft.AspNetCore.App" />
-	</ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.AspNetCore.App" />
+  </ItemGroup>
 
-	<ItemGroup>
-		<ProjectReference Include="..\MedsProcessor.Common\MedsProcessor.Common.csproj" />
-		<ProjectReference Include="..\MedsProcessor.Scraper\MedsProcessor.Scraper.csproj" />
-		<ProjectReference Include="..\MedsProcessor.Parser\MedsProcessor.Parser.csproj" />
-		<ProjectReference Include="..\MedsProcessor.Downloader\MedsProcessor.Downloader.csproj" />
-	</ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\MedsProcessor.Common\MedsProcessor.Common.csproj" />
+    <ProjectReference Include="..\MedsProcessor.Scraper\MedsProcessor.Scraper.csproj" />
+    <ProjectReference Include="..\MedsProcessor.Parser\MedsProcessor.Parser.csproj" />
+    <ProjectReference Include="..\MedsProcessor.Downloader\MedsProcessor.Downloader.csproj" />
+  </ItemGroup>
 
 </Project>

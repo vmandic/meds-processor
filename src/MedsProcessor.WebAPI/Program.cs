@@ -1,24 +1,27 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Threading.Tasks;
+using MedsProcessor.WebAPI.Core;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace MedsProcessor.WebAPI
 {
     public class Program
+  {
+    public static async Task Main(string[] args)
     {
-        public static void Main(string[] args)
-        {
-            CreateWebHostBuilder(args).Build().Run();
-        }
+      var host = CreateWebHostBuilder(args).Build();
+      var processor = host.Services.GetService<HzzoDataProcessor>();
 
-        public static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
-            WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>();
+      #pragma warning disable
+      // no need to wait for processor to finish
+      processor.Run();
+      #pragma warning enable
+
+      await host.RunAsync();
     }
+
+    private static IWebHostBuilder CreateWebHostBuilder(string[] args) =>
+      WebHost.CreateDefaultBuilder(args).UseStartup<Startup>();
+  }
 }
