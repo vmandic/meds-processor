@@ -15,6 +15,9 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Converters;
+using Newtonsoft.Json.Serialization;
 
 namespace MedsProcessor.WebAPI
 {
@@ -42,7 +45,18 @@ namespace MedsProcessor.WebAPI
       services.AddSingleton<HzzoData>();
       services.AddSingleton<HzzoDataProcessor>();
 
-      services.AddMvc().SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
+      services.AddMvc().AddJsonOptions(opts =>
+      {
+        opts.SerializerSettings.ContractResolver = new DefaultContractResolver
+        {
+        NamingStrategy = new SnakeCaseNamingStrategy()
+        };
+        opts.SerializerSettings.Formatting = Formatting.Indented;
+        opts.SerializerSettings.Converters.Add(new StringEnumConverter());
+        opts.SerializerSettings.DateFormatString = "yyyy-MM-dd";
+        opts.SerializerSettings.DefaultValueHandling = DefaultValueHandling.Ignore;
+        opts.SerializerSettings.NullValueHandling = NullValueHandling.Ignore;
+      }).SetCompatibilityVersion(CompatibilityVersion.Version_2_1);
     }
 
     // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
