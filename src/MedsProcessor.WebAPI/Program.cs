@@ -6,7 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MedsProcessor.WebAPI
 {
-    public class Program
+	public class Program
 	{
 		public static async Task Main(string[] args)
 		{

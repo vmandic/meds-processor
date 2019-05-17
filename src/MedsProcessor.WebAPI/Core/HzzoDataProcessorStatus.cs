@@ -34,7 +34,7 @@ namespace MedsProcessor.WebAPI.Core
 
 		public TimeSpan? LastRunStartedBefore =>
 			LastRunFinishedOn.HasValue
-				? DateTime.Now.Subtract(LastRunStartedOn.Value)
+				? DateTime.Now.Subtract(LastRunStartedOn.Value).Duration()
 				: (TimeSpan?) null;
 
 		public DateTime? LastRunFinishedOn { get; }
