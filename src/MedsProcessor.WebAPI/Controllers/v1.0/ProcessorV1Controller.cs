@@ -8,13 +8,13 @@ using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers
+namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
-	public class ProcessorController : ApiControllerBase
+	public class ProcessorV1Controller : ApiV1ControllerBase
 	{
 		private readonly HzzoDataProcessor _processor;
 
-		public ProcessorController(HzzoDataProcessor processor)
+		public ProcessorV1Controller(HzzoDataProcessor processor)
 		{
 			this._processor = processor;
 		}
@@ -45,7 +45,7 @@ namespace MedsProcessor.WebAPI.Controllers
 		/// <para/>
 		/// The action can not be performed if processor is currently executing.
 		/// <para/>
-		/// The internal method is called by a force=true call to the action method: <see cref="ProcessorController.GetRun(bool)"/>.
+		/// The internal method is called by a force=true call to the action method: <see cref="ProcessorV1Controller.GetRun(bool)"/>.
 		/// </summary>
 		/// <returns>Returns a JSON formatted message informing if the clear action was successful.</returns>
 		[HttpGet("processor/clear-data")]

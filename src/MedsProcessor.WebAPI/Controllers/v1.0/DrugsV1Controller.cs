@@ -7,13 +7,13 @@ using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Mvc;
 
-namespace MedsProcessor.WebAPI.Controllers
+namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
-  public class DrugsController : ApiControllerBase
+  public class DrugsV1Controller : ApiV1ControllerBase
   {
     private readonly IEnumerable<HzzoMedsImportDto> _allMeds;
 
-    public DrugsController(HzzoData data)
+    public DrugsV1Controller(HzzoData data)
     {
       this._allMeds = data.Set.SelectMany(x => x.MedsList);
     }
