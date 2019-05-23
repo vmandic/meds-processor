@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 
 namespace MedsProcessor.WebAPI.Controllers.v1_0
 {
-  [ApiVersion("1.0"), Route("api/v{apiVersion:apiVersion}")]
+  [Authorize, ApiVersion("1.0"), Route("api/v{apiVersion:apiVersion}")]
   [ProducesResponseType(401), ProducesResponseType(403)]
   public abstract class ApiV1ControllerBase : ApiControllerBase { }
 }
