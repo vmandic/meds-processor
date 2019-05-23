@@ -9,6 +9,7 @@ using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Core;
+using MedsProcessor.WebAPI.Extensions;
 using MedsProcessor.WebAPI.Infrastructure;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Builder;
@@ -139,8 +140,7 @@ namespace MedsProcessor.WebAPI
         });
 
         opts.AddSecurityRequirement(new Dictionary<string, IEnumerable<string>>
-        {
-          { "Bearer", new string[] { } }
+        { { "Bearer", new string[] { } }
         });
       });
     }
@@ -157,15 +157,29 @@ namespace MedsProcessor.WebAPI
         app.UseHsts();
       }
 
-			// Enable middleware to serve generated Swagger as a JSON endpoint.
-			app.UseSwagger();
+      // Authorize access to the Swagger documentation site for non local requests
+      app.UseBasicAuthentication(opts =>
+      {
+        opts.AuthorizeLocalRequest = false;
+        opts.AuthorizeRoutes("/swagger");
+        opts.Username = "admin";
+        opts.Password = "admin";
+      });
 
-			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
-			app.UseSwaggerUI(c =>
-				c.SwaggerEndpoint("/swagger/v1-0/swagger.json", "HZZO meds-processor v1.0"));
+      // Enable middleware to serve generated Swagger as a JSON endpoint.
+      app.UseSwagger();
+
+      // Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
+      app.UseSwaggerUI(c =>
+        c.SwaggerEndpoint("/swagger/v1-0/swagger.json", "HZZO meds-processor v1.0"));
 
       app.UseHttpsRedirection();
       app.UseAuthentication();
+
+      // Expose the API for outer domain requests
+      app.UseCors(opts =>
+        opts.AllowAnyOrigin().AllowAnyHeader().WithMethods("GET", "POST", "OPTIONS"));
+
       app.UseMvc();
     }
   }
