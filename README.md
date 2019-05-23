@@ -53,7 +53,7 @@ The repository is composed of four parts. Those parts are **git branches** where
 - **part/3** ([Practical .NET Core 🚀— write a scraper, fetcher & .xls(x) parser. Part 3: Parser](https://medium.com/@vekzdran/practical-net-core-build-a-scraper-fetcher-xls-x-parser-part-3-cross-platform-parser-657822ea8471))
   - The longest and thughest. Continues on part/2 where you have downloaded spreadsheet docs that need parsing into C# models. You will learn to use the `NPOI` spreadsheets parsing library to extract relevant data for your C# model classes. Upon finishing you will have a single dataset of transformed and organized data.
 
-- **part/4** (source complete, blog in the writing...)
+- **part/4** ([Practical .NET Core 🚀— write a scraper, fetcher & .xls(x) parser. Part 4: Secure REST web API](https://medium.com/@vekzdran/practical-net-core-write-a-web-scraper-fetcher-excel-parser-part-4-secure-rest-web-api-b07d002c0bac))
   - The shortest and cutest, kidding, the longest. Continues on part/3 where you now reogranize the front facing Web API application and introduce new Controller code to expose a friendly REST-like API to server desired JSON to a client query sent over HTTP(S). You will learn how to throttle, authenticate (with JWT) and authorize requests. Also you will give the client an overview of your API through a `Swagger` library documentation page based upon your Controllers and Actions.
 
 ## Caveats 🤕
