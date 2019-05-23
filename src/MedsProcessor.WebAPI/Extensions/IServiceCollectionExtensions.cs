@@ -45,7 +45,6 @@ namespace MedsProcessor.WebAPI.Extensions
 			this IServiceCollection services,
 			IConfiguration config)
 		{
-			services.AddHttpContextAccessor();
 			services.Configure<IpRateLimitOptions>(config.GetSection("HttpRequestRateLimit"));
 
 			// inject counter and rules stores

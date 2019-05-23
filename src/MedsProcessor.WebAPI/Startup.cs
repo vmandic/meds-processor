@@ -24,6 +24,7 @@ namespace MedsProcessor.WebAPI
 		{
 			services.AddOptions();
 			services.AddMemoryCache();
+			services.AddHttpContextAccessor();
 			services.AddHttpClient();
 			services.AddAngleSharp();
 			services.AddResponseCompression(opts => opts.EnableForHttps = true);
