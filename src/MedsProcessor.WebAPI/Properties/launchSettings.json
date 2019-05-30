@@ -1,4 +1,4 @@
-﻿{
+{
 	"$schema": "http://json.schemastore.org/launchsettings.json",
 	"iisSettings": {
 		"windowsAuthentication": false,
@@ -12,7 +12,7 @@
 		"IIS Express": {
 			"commandName": "IISExpress",
 			"launchBrowser": true,
-			"launchUrl": "api/app",
+			"launchUrl": "",
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
 			}
@@ -20,7 +20,7 @@
 		"MedsProcessor.WebAPI": {
 			"commandName": "Project",
 			"launchBrowser": true,
-			"launchUrl": "api/app",
+			"launchUrl": "",
 			"applicationUrl": "https://localhost:5001;http://localhost:5000",
 			"environmentVariables": {
 				"ASPNETCORE_ENVIRONMENT": "Development"
