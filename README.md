@@ -4,6 +4,10 @@
 
 **This is the perfect place to start learning C# and .NET Core by building something real with looks and feels to it - a drug list data scraper and a secure documented REST web API.** This project is designed for developers who have moderate programming experience and some experience in building web apps but have not still encuntered C# and .NET on the backend.
 
+## UPDATE and NOTICE: 2019-10-19
+
+The processor might be in a bit of a problem at the moment due to the fact that a new (fifth...) parser is required as a new .xls(x) scheme has been published for 2019. :-) ah, burocracy in Croatia, you gotta love it. A quick fix for you guys is to filter out documents by a `ValidFrom.Year < 2019` expression. I will be fixing this with the additional parser (or other fix) and updating the blog posts!
+
 ## Built with .NET Core SDK 🔧
 
 The cross-platform production ready SDK is [.NET Core](https://dotnet.microsoft.com/download) and the version used to build this application is `"version": "2.1.403"`. You can find the SDK downloads for your OS [here](https://dotnet.microsoft.com/download/dotnet-core/2.1#sdk-2.1.403).
