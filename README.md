@@ -1,5 +1,3 @@
-[![Build Status](https://dev.azure.com/vmandic/meds-processor/_apis/build/status/vmandic.meds-processor?branchName=master)](https://dev.azure.com/vmandic/meds-processor/_build/latest?definitionId=2&branchName=master)
-
 # The build a `meds-processor` 💊 guide to C# and .NET Core
 
 **This is the perfect place to start learning C# and .NET Core by building something real with looks and feels to it - a drug list data scraper and a secure documented REST web API.** This project is designed for developers who have moderate programming experience and some experience in building web apps but have not still encuntered C# and .NET on the backend.
