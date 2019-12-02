@@ -13,13 +13,15 @@ namespace MedsProcessor.WebAPI.Controllers
 		/// </summary>
 		/// <returns>Returns a JSON formatted message which will contain exception details if the framework can resolve the latest error.</returns>
 		[HttpGet, Produces(typeof(ApiDataResponse<System.Exception>))]
-		public ActionResult<ApiHttpResponse> GetError()
+		public ActionResult<ApiMessageResponse> GetError()
 		{
 			var exFeat = HttpContext.Features.Get<IExceptionHandlerPathFeature>();
 
-			return exFeat == null
-				? ApiResponse.ForMessage("Internal server error details unavailable.", 500)
-				: ApiResponse.ForData(exFeat.Error, 500, exFeat.Error.Message);
+			return ApiResponse.ForMessage(
+				exFeat == null
+					? "Internal server error details unavailable."
+					: exFeat.Error.Message,
+				500);
 		}
 	}
 }

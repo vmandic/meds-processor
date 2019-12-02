@@ -6,7 +6,7 @@ namespace MedsProcessor.WebAPI.Models
 	{
 		public TObjectModel Data { get; }
 
-		public ApiDataResponse(int statusCode, TObjectModel model, string message = null) : base(statusCode, message)
+		public ApiDataResponse(TObjectModel model, string message = null) : base(message)
 		{
 			if (model == default)
 			{

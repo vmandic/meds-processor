@@ -3,7 +3,6 @@ using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
 using MedsProcessor.Common;
-using MedsProcessor.Common.Models;
 using MedsProcessor.Downloader;
 using MedsProcessor.Parser;
 using MedsProcessor.Scraper;
@@ -42,7 +41,7 @@ namespace MedsProcessor.WebAPI.Core
 			Environment.NewLine +
 			$"Documents: {string.Join(Environment.NewLine, _data.Set.Select(x => x.FileName))}";
 
-		public async Task<string> Run(bool force = false)
+		public async Task<string> RunAsync(bool force = false)
 		{
 			// utilize if-async-lock-if pattern
 			// ref: https://en.wikipedia.org/wiki/Double-checked_locking

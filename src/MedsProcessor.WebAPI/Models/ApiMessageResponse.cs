@@ -1,15 +1,13 @@
-using System;
-using System.Net;
 using Newtonsoft.Json;
 
 namespace MedsProcessor.WebAPI.Models
 {
-	public class ApiMessageResponse : ApiHttpResponse
+	public class ApiMessageResponse
 	{
 		[JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
 		public string Message { get; }
 
-		public ApiMessageResponse(int statusCode, string message) : base(statusCode)
+		public ApiMessageResponse(string message) : base()
 		{
 			this.Message = message;
 		}

@@ -31,10 +31,10 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		public ActionResult GetDumpJson(
-			DrugListTypeFilter type,
-			string years = null,
-			int? page = null,
-			int? size = null)
+			[FromRoute] DrugListTypeFilter type,
+			[FromRoute] string years = null,
+			[FromQuery] int? page = 1,
+			[FromQuery] int? size = 12)
 		{
 			var result =
 				FilterByYears(years,
@@ -56,9 +56,9 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		[ProducesResponseType(typeof(ApiDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		[ProducesResponseType(typeof(ApiPagedDataResponse<IEnumerable<HzzoMedsImportDto>>), 200)]
 		public ActionResult GetSearchForDrug(
-			string searchQuery,
-			int? page = null,
-			int? size = null)
+			[FromRoute] string searchQuery,
+			[FromQuery] int? page = 1,
+			[FromQuery] int? size = 12)
 		{
 			bool ContainsSearchForProp(string str) =>
 				str != null && str.Contains(searchQuery, StringComparison.OrdinalIgnoreCase);
@@ -87,7 +87,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		/// <returns>Returns a JSON list containing the found drugs mateched by the provided ATK code query parameter.</returns>
 		[HttpGet("drugs/for/atk/{atkCode:length(4,12)}")]
 		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByAtkCode(
-			string atkCode)
+			[FromRoute] string atkCode)
 		{
 			// Ensure that the atk code string ends with a whitespace followed by three characters
 			if (atkCode.Reverse().ToArray() [3] != ' ')
@@ -118,7 +118,7 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		/// </returns>
 		[HttpGet("drugs/by-matching/manufacturer/{manufacturer:length(1,50)}")]
 		public ActionResult<ApiDataResponse<IEnumerable<HzzoMedsImportDto>>> GetListByManufacturer(
-			string manufacturer)
+			[FromRoute] string manufacturer)
 		{
 			manufacturer = manufacturer.Trim();
 

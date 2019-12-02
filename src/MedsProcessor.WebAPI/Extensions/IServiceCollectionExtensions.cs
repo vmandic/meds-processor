@@ -50,6 +50,8 @@ namespace MedsProcessor.WebAPI.Extensions
 			// inject counter and rules stores
 			services.AddSingleton<IIpPolicyStore, MemoryCacheIpPolicyStore>();
 			services.AddSingleton<IRateLimitCounterStore, MemoryCacheRateLimitCounterStore>();
+			// configure the resolvers
+			services.AddSingleton<IRateLimitConfiguration, RateLimitConfiguration>();
 
 			return services;
 		}

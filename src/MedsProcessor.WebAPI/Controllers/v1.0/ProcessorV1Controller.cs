@@ -1,9 +1,4 @@
-using System;
 using System.Threading.Tasks;
-using MedsProcessor.Common.Models;
-using MedsProcessor.Downloader;
-using MedsProcessor.Parser;
-using MedsProcessor.Scraper;
 using MedsProcessor.WebAPI.Core;
 using MedsProcessor.WebAPI.Models;
 using MedsProcessor.WebAPI.Infrastructure;
@@ -30,8 +25,8 @@ namespace MedsProcessor.WebAPI.Controllers.v1_0
 		/// <param name="force">Specify if a processor re-execution will be enforeced.</param>
 		/// <returns>Returns a JSON formatted message with the information about the processor run including info about processed documents and time of processing.</returns>
 		[HttpGet("processor/run/{force?}")]
-		public async Task<ActionResult<ApiMessageResponse>> GetRun(bool force = false) =>
-			ApiResponse.ForMessage(await _processor.Run(force));
+		public async Task<ActionResult<ApiMessageResponse>> GetRun([FromRoute] bool force = false) =>
+			ApiResponse.ForMessage(await _processor.RunAsync(force));
 
 		/// <summary>
 		/// Gets information about the current state of the processor such as execution times and if the processor has successfully ran to completion.

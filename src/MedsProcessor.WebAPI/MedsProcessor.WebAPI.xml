@@ -115,11 +115,5 @@
             Configures the JWT options by reading configuration options for <see cref="T:MedsProcessor.WebAPI.Infrastructure.AuthTokenOptions" />.
             </summary>
         </member>
-        <member name="T:MedsProcessor.WebAPI.Models.ApiHttpResponse">
-            <summary>
-            For the sake of the tutorial, this class will wrap over HTTP header data and provide the HTTP status code and its description.
-            </summary>
-            <remarks>Do not consider using this class at all in production environments. Your base class can instead be <see cref="T:MedsProcessor.WebAPI.Models.ApiMessageResponse" /> which can include an additional <c>IsError</c> boolean property indicating if the HTTP request processing errored.</remarks>
-        </member>
     </members>
 </doc>

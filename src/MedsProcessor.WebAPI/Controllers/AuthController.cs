@@ -16,18 +16,19 @@ namespace MedsProcessor.WebAPI.Controllers
 		}
 
 		[AllowAnonymous, HttpPost("token")]
-		public ActionResult<AuthTokenResponse> RequestToken([FromBody] AuthTokenRequest request)
+		[ProducesResponseType(typeof(AuthTokenResponse), 401)]
+		public ActionResult<ApiDataResponse<AuthTokenResponse>> RequestToken([FromBody] AuthTokenRequest request)
 		{
 			var(authenticatedSuccessfully, token) = jwtService.IssueToken(request);
 
 			return authenticatedSuccessfully
 				? ApiResponse.ForData(
 						new AuthTokenResponse(token),
-						message: "Access token issued successfully.")
+						"Access token issued successfully.")
 				: ApiResponse.ForData(
 						new AuthTokenResponse(),
-						StatusCodes.Status401Unauthorized,
-						message: "An invalid or unauthorized Client ID was provided.");
+						"An invalid or unauthorized Client ID was provided.",
+						StatusCodes.Status401Unauthorized);
 		}
 	}
 }

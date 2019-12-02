@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.Linq;
-using MedsProcessor.Common;
 using MedsProcessor.WebAPI.Models;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,26 +7,19 @@ namespace MedsProcessor.WebAPI.Infrastructure
 {
 	public static class ApiResponse
 	{
-		public static ObjectResult ForCode(int statusCode) =>
+			public static ObjectResult ForMessage(string message, int statusCode = 200) =>
 			new ObjectResult(
-				new Models.ApiHttpResponse(statusCode))
-			{
-				StatusCode = statusCode
-			};
-
-		public static ObjectResult ForMessage(string message, int statusCode = 200) =>
-			new ObjectResult(
-				new ApiMessageResponse(statusCode, message))
+				new ApiMessageResponse(message))
 			{
 				StatusCode = statusCode
 			};
 
 		public static ObjectResult ForData<TObjectModel>(
 				TObjectModel model,
-				int statusCode = 200,
-				string message = null) =>
+				string message = null,
+				int statusCode = 200) where TObjectModel : class =>
 			new ObjectResult(
-				new ApiDataResponse<TObjectModel>(statusCode, model, message))
+				new ApiDataResponse<TObjectModel>(model, message))
 			{
 				StatusCode = statusCode
 			};
@@ -36,14 +28,14 @@ namespace MedsProcessor.WebAPI.Infrastructure
 				IEnumerable<TObjectModel> model,
 				int page,
 				int size,
-				int statusCode = 200,
-				string message = null) =>
+				string message = null,
+				int statusCode = 200) =>
 			new ObjectResult(
 				new ApiPagedDataResponse<IEnumerable<TObjectModel>>(
-					statusCode,
 					GetPaged(page, size, model),
 					page,
 					size,
+					model.LongCount(),
 					message))
 			{
 				StatusCode = statusCode
@@ -53,25 +45,25 @@ namespace MedsProcessor.WebAPI.Infrastructure
 				IEnumerable<TObjectModel> model,
 				int? page = null,
 				int? size = null,
-				int statusCode = 200,
-				string messageForPagedData = null) =>
-			page.HasValue && size.HasValue
-				? ForPagedData(
-						model,
-						page.Value,
-						size.Value,
-						statusCode,
-						messageForPagedData)
-				:	ForData(
-						model,
-						statusCode,
-						message: "To get paged data sepcify both 'page' and 'size' query params.");
+				string messageForPagedData = null,
+				int statusCode = 200) =>
+			page.HasValue && size.HasValue ?
+			ForPagedData(
+				model,
+				page.Value,
+				size.Value,
+				messageForPagedData,
+				statusCode) :
+			ForData(
+				model,
+				"To get paged data sepcify both 'page' and 'size' query params.",
+				statusCode);
 
 		private static IEnumerable<TObjectModel> GetPaged<TObjectModel>(
-			int page,
-			int size,
-			IEnumerable<TObjectModel> model) =>
-		model
+				int page,
+				int size,
+				IEnumerable<TObjectModel> model) =>
+			model
 			.Skip((page - 1) * size)
 			.Take(size);
 	}

@@ -5,11 +5,11 @@ namespace MedsProcessor.WebAPI.Models
 	public class ApiPagedDataResponse<TObjectModel> : ApiDataResponse<TObjectModel>
 	{
 		public ApiPagedDataResponse(
-			int statusCode,
 			TObjectModel model,
 			int pageNumber,
 			int pageSize,
-			string message = null) : base(statusCode, model, message)
+			long totalItems,
+			string message = null) : base(model, message)
 		{
 			if (pageNumber < 1)
 			{
@@ -23,9 +23,11 @@ namespace MedsProcessor.WebAPI.Models
 
 			PageNumber = pageNumber;
 			PageSize = pageSize;
+			TotalItems = totalItems;
 		}
 
 		public int PageNumber { get; }
 		public int PageSize { get; }
+		public long TotalItems { get; }
 	}
 }

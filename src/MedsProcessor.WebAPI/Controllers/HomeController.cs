@@ -23,7 +23,7 @@ namespace MedsProcessor.WebAPI.Controllers
 
 			sb.Append(isFirstTimeRun ?
 					"The HZZO meds-processor has started with the Web API launch!" :
-					"Welcome to the HZZO meds-processor.")
+					"Welcome to the HZZO meds-processor. You can browse the API docs at /swagger path.")
 				.Append($" You can check the status at: { v1StatusUrl }");
 
 			isFirstTimeRun = false;
