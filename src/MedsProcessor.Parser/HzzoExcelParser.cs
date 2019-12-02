@@ -27,16 +27,18 @@ namespace MedsProcessor.Parser
 
 		public ISet<HzzoMedsDownloadDto> Run(ISet<HzzoMedsDownloadDto> meds)
 		{
-			_medsCount = meds.Count;
+			// HACK: due to a bug with the parser introduced in 2019, we are skipping year 2019
+			_medsCount = meds.Count(x => x.ValidFrom.Year < 2019);
 			_parsedCount = 0;
 
-			Parallel.ForEach(new Action<ISet<HzzoMedsDownloadDto>>[]
-			{
-					ParsePrimaryListsStartingWith2014_02,
-					ParseSupplementaryListsStartingWith2014_02,
-					ParsePrimaryListsUpTo2014_01,
-					ParseSupplementaryListsUpTo2014_01
-			}, parser => parser(meds));
+			// NOTE: we can do this below in parallel but this way it is more stable due to file
+			// lock possibility with the file system and dotnet core process
+
+			ParsePrimaryListsUpTo2014_01(meds);
+			ParseSupplementaryListsUpTo2014_01(meds);
+
+			ParsePrimaryListsStartingWith2014_02(meds);
+			ParseSupplementaryListsStartingWith2014_02(meds);
 
 			_logger.LogInformation("Parser complete!");
 			return meds;
@@ -79,7 +81,8 @@ namespace MedsProcessor.Parser
 
 			try
 			{
-				foreach (var med in filteredMeds)
+				// HACK: due to a bug with the parser introduced in 2019, we are skipping year 2019
+				foreach (var med in filteredMeds.Where(x => x.ValidFrom.Year < 2019))
 				{
 					latestMed = med;
 					using(var stream = File.Open(med.FilePath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
