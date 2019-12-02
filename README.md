@@ -9,7 +9,7 @@
 
 ## Built with .NET Core SDK 🔧
 
-The cross-platform production ready SDK is [.NET Core](https://dotnet.microsoft.com/download) and the version used to build this application is `"version": "2.1.403"`. You can find the SDK downloads for your OS [here](https://dotnet.microsoft.com/download/dotnet-core/2.1#sdk-2.1.403).
+The cross-platform production ready SDK is [.NET Core](https://dotnet.microsoft.com/download) and the version used to build this application is `"version": "2.2.402"`. You can find the SDK downloads for your OS [here](https://dotnet.microsoft.com/download/dotnet-core/2.2#sdk-2.2.402).
 
 ## Build, run & use 🏃
 
