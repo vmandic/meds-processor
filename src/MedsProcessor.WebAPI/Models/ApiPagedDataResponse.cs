@@ -2,7 +2,7 @@ using System;
 
 namespace MedsProcessor.WebAPI.Models
 {
-	public class ApiPagedDataResponse<TObjectModel> : ApiDataResponse<TObjectModel>
+	public class ApiPagedDataResponse<TObjectModel> : ApiDataResponse<TObjectModel> where TObjectModel : class
 	{
 		public ApiPagedDataResponse(
 			TObjectModel model,
