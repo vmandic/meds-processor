@@ -28,6 +28,7 @@ namespace MedsProcessor.WebAPI
 			services.AddHttpClient();
 			services.AddAngleSharp();
 			services.AddResponseCompression(opts => opts.EnableForHttps = true);
+			services.AddHealthChecks();
 
 			services.ConfigureApiVersioning();
 			services.ConfigureHttpRequestThrottlingByIp(Configuration);
@@ -73,6 +74,8 @@ namespace MedsProcessor.WebAPI
 			// Enable middleware to serve swagger-ui (HTML, JS, CSS, etc.), specifying the Swagger JSON endpoint.
 			app.UseSwaggerUI(c =>
 				c.SwaggerEndpoint("/swagger/v1-0/swagger.json", "HZZO meds-processor v1.0"));
+
+			app.UseHealthChecks("/health");
 
 			app.UseMvc();
 		}
